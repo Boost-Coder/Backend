@@ -6,6 +6,7 @@ import { Algorithm } from '../Entity/algorithm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { Github } from '../Entity/github';
 import { Grade } from '../Entity/grade';
+import { TotalPoint } from '../Entity/totalPoint';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -19,7 +20,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             username: this.configService.get('DB_USERNAME'),
             password: this.configService.get('DB_PASSWORD'),
             database: this.configService.get('DB_DATABASE'),
-            entities: [User, Algorithm, Github, Grade],
+            entities: [User, Algorithm, Github, Grade, TotalPoint],
             synchronize: true,
             namingStrategy: new SnakeNamingStrategy(),
         };

@@ -3,6 +3,7 @@ import { JoinColumn } from 'typeorm';
 import { Github } from './github';
 import { Algorithm } from './algorithm';
 import { Grade } from './grade';
+import { TotalPoint } from './totalPoint';
 
 @Entity()
 export class User {
@@ -47,4 +48,7 @@ export class User {
 
     @OneToOne(() => Grade, (grade) => grade.userId)
     grade: Grade;
+
+    @OneToOne(() => TotalPoint, (totalPoint) => totalPoint.userId)
+    totalScore: TotalPoint;
 }
