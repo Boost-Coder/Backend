@@ -1,24 +1,24 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class AlgorithmRank {
+export class Algorithm {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
         length: 8,
+        unique: true,
     })
-    user_id: string;
+    userId: string;
 
     @Column({
         length: 21,
+        unique: true,
     })
-    boj_id: string;
+    bojId: string;
 
-    @Column({
-        length: 5,
-    })
-    boj_score: number;
+    @Column()
+    bojScore: number;
 
     @Column()
     point: number;

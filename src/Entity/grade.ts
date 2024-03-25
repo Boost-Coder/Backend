@@ -1,13 +1,15 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export class GradeRank {
+@Entity()
+export class Grade {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
         length: 8,
+        unique: true,
     })
-    user_id: string;
+    userId: string;
 
     @Column('double')
     grade: number;

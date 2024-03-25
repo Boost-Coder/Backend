@@ -7,8 +7,9 @@ export class User {
 
     @Column({
         length: 8,
+        unique: true,
     })
-    user_id: string;
+    userId: string;
 
     @Column({
         length: 30,
@@ -25,13 +26,12 @@ export class User {
     })
     name: string;
 
-    @Column({
-        length: 10,
-    })
+    @Column({ unique: true })
     student_id: number;
 
     @Column({
         length: 320,
+        unique: true,
     })
     social_email: string;
 }

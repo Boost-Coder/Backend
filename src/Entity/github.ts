@@ -1,15 +1,22 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class GitHubRank {
+export class Github {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
         length: 8,
+        unique: true,
     })
-    user_id: string;
+    userId: string;
 
     @Column()
     point: number;
+
+    @Column()
+    accessToken: string;
+
+    @Column()
+    refreshToken: string;
 }
