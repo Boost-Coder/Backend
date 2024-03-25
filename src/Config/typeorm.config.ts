@@ -21,7 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
             password: this.configService.get('DB_PASSWORD'),
             database: this.configService.get('DB_DATABASE'),
             entities: [User, Algorithm, Github, Grade, TotalPoint],
-            synchronize: true,
+            synchronize: process.env.NODE_ENV !== 'prod',
             namingStrategy: new SnakeNamingStrategy(),
         };
     }
