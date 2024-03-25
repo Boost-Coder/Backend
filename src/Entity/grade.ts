@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    OneToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from './user';
 
 @Entity()
 export class Grade {
@@ -16,4 +23,8 @@ export class Grade {
 
     @Column()
     point: number;
+
+    @OneToOne(() => User, (user) => user.userId)
+    @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
+    user: User;
 }

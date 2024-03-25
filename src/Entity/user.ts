@@ -1,4 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { JoinColumn } from 'typeorm';
+import { Github } from './github';
+import { Algorithm } from './algorithm';
+import { Grade } from './grade';
 
 @Entity()
 export class User {
@@ -34,4 +38,13 @@ export class User {
         unique: true,
     })
     social_email: string;
+
+    @OneToOne(() => Github, (github) => github.userId)
+    github: Github;
+
+    @OneToOne(() => Algorithm, (algorithm) => algorithm.userId)
+    algorithm: Algorithm;
+
+    @OneToOne(() => Grade, (grade) => grade.userId)
+    grade: Grade;
 }
