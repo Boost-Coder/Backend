@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import * as process from 'process';
+import { WinstonModule } from 'nest-winston';
+import { winstonOptions } from './Config/winston.config';
 
 @Module({
     imports: [
@@ -14,6 +16,9 @@ import * as process from 'process';
         ConfigModule.forRoot({
             isGlobal: true,
             envFilePath: `${process.cwd()}/envs/${process.env.NODE_ENV}.env`,
+        }),
+        WinstonModule.forRoot({
+            transports: winstonOptions,
         }),
     ],
     controllers: [AppController],
