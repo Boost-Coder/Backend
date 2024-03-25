@@ -1,5 +1,12 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { JoinColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { Github } from './github';
 import { Algorithm } from './algorithm';
 import { Grade } from './grade';
@@ -39,6 +46,21 @@ export class User {
         unique: true,
     })
     social_email: string;
+
+    @CreateDateColumn({
+        type: 'timestamp',
+        nullable: false,
+    })
+    createDate: Date;
+
+    @UpdateDateColumn({
+        type: 'timestamp',
+        nullable: true,
+    })
+    updateDate: Date;
+
+    @DeleteDateColumn()
+    delete_date: Date;
 
     @OneToOne(() => Github, (github) => github.userId)
     github: Github;
