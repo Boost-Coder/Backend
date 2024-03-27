@@ -39,13 +39,13 @@ export class User {
     name: string;
 
     @Column({ unique: true })
-    student_id: number;
+    studentId: number;
 
     @Column({
         length: 320,
         unique: true,
     })
-    social_email: string;
+    socialEmail: string;
 
     @CreateDateColumn({
         type: 'timestamp',
@@ -60,7 +60,7 @@ export class User {
     updateDate: Date;
 
     @DeleteDateColumn()
-    delete_date: Date;
+    deleteDate: Date;
 
     @OneToOne(() => Github, (github) => github.userId)
     github: Github;
