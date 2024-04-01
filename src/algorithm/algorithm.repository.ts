@@ -15,4 +15,8 @@ export class AlgorithmRepository extends BaseRepository {
     async save(algorithm: Algorithm) {
         await this.repository.save(algorithm);
     }
+
+    async findOneById(userId) {
+        return await this.repository.findOneBy({ userId: userId });
+    }
 }
