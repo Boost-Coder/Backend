@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import axios from 'axios';
 import { AlgorithmRepository } from './algorithm.repository';
 import { Algorithm } from '../Entity/algorithm';
@@ -54,7 +58,7 @@ export class AlgorithmService {
     async modifyAlgorithm(userId: string, bojId: string) {
         const algorithm = await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
-            throw new NotFoundError('Algorithm info not found');
+            throw new NotFoundException('Algorithm info not found');
         }
         const bojInfo = await this.getBOJInfo(bojId);
         algorithm.bojId = bojId;
