@@ -25,7 +25,13 @@ export class Algorithm {
     bojId: string;
 
     @Column()
-    bojScore: number;
+    rating: number;
+
+    @Column()
+    tier: number;
+
+    @Column()
+    solvedCount: number;
 
     @Column()
     point: number;
