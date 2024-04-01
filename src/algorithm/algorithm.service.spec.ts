@@ -168,4 +168,34 @@ describe('AlgorithmService', () => {
             ).rejects.toThrow('Algorithm info not found');
         });
     });
+
+    describe('updateAlgorithm', function () {
+        it('should update', async function () {
+            const userId = 'user';
+            const algorithm = new Algorithm();
+            algorithm.userId = userId;
+            algorithm.bojId = 'user1';
+            algorithm.rating = 1500;
+            algorithm.tier = 16;
+            algorithm.solvedCount = 100;
+            algorithm.point = 0;
+            algorithmRepository.findOneById.mockResolvedValue(algorithm);
+
+            const mockResponse = {
+                data: {
+                    rating: 1600,
+                    tier: 17,
+                    solvedCount: 105,
+                },
+            };
+            (axios.get as jest.Mock).mockResolvedValue(mockResponse);
+            await service.updateAlgorithm(userId);
+            const callProperty = algorithmRepository.update.mock.calls[0][1];
+            expect(callProperty.rating).toEqual(mockResponse.data.rating);
+            expect(callProperty.tier).toEqual(mockResponse.data.tier);
+            expect(callProperty.solvedCount).toEqual(
+                mockResponse.data.solvedCount,
+            );
+        });
+    });
 });
