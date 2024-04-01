@@ -3,6 +3,7 @@ import axios from 'axios';
 import { AlgorithmRepository } from './algorithm.repository';
 import { Algorithm } from '../Entity/algorithm';
 import { QueryFailedError } from 'typeorm';
+import { NotFoundError } from 'rxjs';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -36,6 +37,20 @@ export class AlgorithmService {
             }
         }
     }
+
+    async updateAlgorithm(userId: string) {
+        const algorithm = await this.algorithmRepository.findOneById(userId);
+        if (algorithm === null) {
+            throw new NotFoundError('Algorithm info not found');
+        }
+        const bojInfo = await this.getBOJInfo(algorithm.bojId);
+        algorithm.tier = bojInfo.tier;
+        algorithm.rating = bojInfo.rating;
+        algorithm.solvedCount = bojInfo.solvedCount;
+        algorithm.point = this.calculatePoint(bojInfo);
+        await this.algorithmRepository.update(userId, algorithm);
+    }
+
     async getBOJInfo(bojId: string) {
         try {
             const res = await axios.get(URL + bojId);
