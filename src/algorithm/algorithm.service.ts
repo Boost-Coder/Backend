@@ -2,6 +2,12 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
+
+export interface BOJInfo {
+    tier: number;
+    solvedCount: number;
+    rating: number;
+}
 @Injectable()
 export class AlgorithmService {
     async getBOJInfo(boj_id: string) {
@@ -16,5 +22,9 @@ export class AlgorithmService {
         } catch (e) {
             throw new Error('BOJ ID Not Found');
         }
+    }
+
+    private calculatePoint(bojInfo: BOJInfo) {
+        return 0;
     }
 }
