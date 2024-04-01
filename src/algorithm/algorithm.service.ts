@@ -46,7 +46,7 @@ export class AlgorithmService {
                 solvedCount: bojInfo.solvedCount,
             };
         } catch (e) {
-            throw new Error('BOJ ID Not Found');
+            throw new BadRequestException('incorrect BOJ Id');
         }
     }
 

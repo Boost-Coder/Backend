@@ -57,7 +57,7 @@ describe('AlgorithmService', () => {
             );
 
             await expect(service.getBOJInfo('qwe')).rejects.toThrow(
-                'BOJ ID Not Found',
+                'incorrect BOJ Id',
             );
         });
     });
@@ -98,7 +98,7 @@ describe('AlgorithmService', () => {
 
             await expect(
                 service.createAlgorithm(userId, bojId),
-            ).rejects.toThrow('BOJ ID Not Found');
+            ).rejects.toThrow('incorrect BOJ Id');
         });
 
         it('중복으로 등록하는 경우', async function () {
