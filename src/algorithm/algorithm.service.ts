@@ -1,13 +1,12 @@
 import {
     BadRequestException,
-    HttpException,
     Injectable,
+    Logger,
     NotFoundException,
 } from '@nestjs/common';
 import axios from 'axios';
 import { AlgorithmRepository } from './algorithm.repository';
 import { Algorithm } from '../Entity/algorithm';
-import { QueryFailedError } from 'typeorm';
 import { NotFoundError } from 'rxjs';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
@@ -19,6 +18,7 @@ export interface BOJInfo {
 }
 @Injectable()
 export class AlgorithmService {
+    private logger = new Logger(AlgorithmService.name);
     constructor(private algorithmRepository: AlgorithmRepository) {}
     async createAlgorithm(userId: string, bojId: string) {
         const bojInfo = await this.getBOJInfo(bojId);
@@ -41,12 +41,21 @@ export class AlgorithmService {
         if (algorithm === null) {
             throw new NotFoundError('Algorithm info not found');
         }
-        const bojInfo = await this.getBOJInfo(algorithm.bojId);
-        algorithm.tier = bojInfo.tier;
-        algorithm.rating = bojInfo.rating;
-        algorithm.solvedCount = bojInfo.solvedCount;
-        algorithm.point = this.calculatePoint(bojInfo);
-        await this.algorithmRepository.update(userId, algorithm);
+        try {
+            const bojInfo = await this.getBOJInfo(algorithm.bojId);
+            algorithm.tier = bojInfo.tier;
+            algorithm.rating = bojInfo.rating;
+            algorithm.solvedCount = bojInfo.solvedCount;
+            algorithm.point = this.calculatePoint(bojInfo);
+            await this.algorithmRepository.update(userId, algorithm);
+        } catch (e) {
+            if (e instanceof BadRequestException) {
+                await this.removeAlgorithm(userId);
+                this.logger.log(`${userId} 님의 알고리즘 스탯이 초기화됨.`);
+            } else {
+                throw e;
+            }
+        }
     }
 
     async modifyAlgorithm(userId: string, bojId: string) {

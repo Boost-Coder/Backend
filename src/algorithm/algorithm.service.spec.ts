@@ -16,7 +16,7 @@ describe('AlgorithmService', () => {
     let service: AlgorithmService;
     let algorithmRepository;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AlgorithmService,
@@ -190,6 +190,17 @@ describe('AlgorithmService', () => {
             expect(callProperty.solvedCount).toEqual(
                 mockResponse.data.solvedCount,
             );
+        });
+
+        it('백준 아이디가 solved.ac에서 삭제된 경우 스탯 초기화', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
+            await service.updateAlgorithm(userId);
+
+            expect(algorithmRepository.delete).toHaveBeenCalled();
         });
     });
 
