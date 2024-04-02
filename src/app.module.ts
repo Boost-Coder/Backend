@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
+import { AlgorithmModule } from './algorithm/algorithm.module';
 import * as process from 'process';
 
 @Module({
@@ -15,6 +16,7 @@ import * as process from 'process';
             isGlobal: true,
             envFilePath: `${process.cwd()}/envs/${process.env.NODE_ENV}.env`,
         }),
+        AlgorithmModule,
     ],
     controllers: [AppController],
     providers: [AppService],
