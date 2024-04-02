@@ -3,12 +3,12 @@ import { AlgorithmService } from './algorithm.service';
 import axios from 'axios';
 import { AlgorithmRepository } from './algorithm.repository';
 import { Algorithm } from '../Entity/algorithm';
-import { QueryFailedError } from 'typeorm';
 
 const mockAlgorithmRepository = {
     save: jest.fn(),
     findOneById: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
 };
 
 jest.mock('axios');
@@ -189,6 +189,25 @@ describe('AlgorithmService', () => {
             expect(callProperty.tier).toEqual(mockResponse.data.tier);
             expect(callProperty.solvedCount).toEqual(
                 mockResponse.data.solvedCount,
+            );
+        });
+    });
+
+    describe('removeAlgorithm', function () {
+        it('should remove', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
+
+            await service.removeAlgorithm(userId);
+
+            expect(algorithmRepository.delete).toHaveBeenCalled();
+        });
+
+        it('존재하지 않는 것을 지우려고 할 때 오류 발생', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(null);
+            await expect(service.removeAlgorithm(userId)).rejects.toThrow(
+                'algorithm not found',
             );
         });
     });
