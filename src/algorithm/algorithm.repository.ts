@@ -23,4 +23,8 @@ export class AlgorithmRepository extends BaseRepository {
     async update(userId: string, algorithm: Algorithm) {
         await this.repository.update({ userId: userId }, algorithm);
     }
+
+    async delete(userId: string) {
+        await this.repository.delete({ userId: userId });
+    }
 }
