@@ -114,13 +114,7 @@ describe('AlgorithmService', () => {
             (axios.get as jest.Mock).mockResolvedValue(mockResponse);
             const userId = 'user';
             const bojId = 'user';
-            algorithmRepository.save.mockRejectedValue(
-                new QueryFailedError(
-                    'insert',
-                    [],
-                    new Error('Duplicate entry error'),
-                ),
-            );
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
             await expect(
                 service.createAlgorithm(userId, bojId),
             ).rejects.toThrow('이미 등록했습니다.');

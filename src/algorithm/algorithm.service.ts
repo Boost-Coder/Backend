@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    HttpException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -21,6 +22,10 @@ export class AlgorithmService {
     constructor(private algorithmRepository: AlgorithmRepository) {}
     async createAlgorithm(userId: string, bojId: string) {
         const bojInfo = await this.getBOJInfo(bojId);
+        const isExist = await this.algorithmRepository.findOneById(userId);
+        if (isExist) {
+            throw new BadRequestException('이미 등록했습니다.');
+        }
         const algorithm: Algorithm = new Algorithm();
         algorithm.userId = userId;
         algorithm.bojId = bojId;
@@ -28,18 +33,7 @@ export class AlgorithmService {
         algorithm.tier = bojInfo.tier;
         algorithm.solvedCount = bojInfo.solvedCount;
         algorithm.point = this.calculatePoint(bojInfo);
-        try {
-            await this.algorithmRepository.save(algorithm);
-        } catch (e) {
-            if (
-                e instanceof QueryFailedError &&
-                e.message.includes('Duplicate entry')
-            ) {
-                throw new BadRequestException('이미 등록했습니다.');
-            } else {
-                throw e;
-            }
-        }
+        await this.algorithmRepository.save(algorithm);
     }
 
     async updateAlgorithm(userId: string) {
