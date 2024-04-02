@@ -81,7 +81,11 @@ export class AlgorithmService {
                 solvedCount: bojInfo.solvedCount,
             };
         } catch (e) {
-            throw new BadRequestException('incorrect BOJ Id');
+            if (e.response && e.response.status === 404) {
+                throw new BadRequestException('incorrect BOJ Id');
+            } else {
+                throw e;
+            }
         }
     }
 

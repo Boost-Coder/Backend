@@ -53,10 +53,10 @@ describe('AlgorithmService', () => {
             expect(res.tier).toEqual(16);
         });
 
-        it('should throw not found error', async function () {
-            (axios.get as jest.Mock).mockRejectedValue(
-                new Error('Failed to fetch'),
-            );
+        it('should throw not found error when bojId is incorrect', async function () {
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
 
             await expect(service.getBOJInfo('qwe')).rejects.toThrow(
                 'incorrect BOJ Id',
@@ -92,9 +92,9 @@ describe('AlgorithmService', () => {
         });
 
         it('백준 아이디가 없는 경우', async function () {
-            (axios.get as jest.Mock).mockRejectedValue(
-                new Error('Failed to fetch'),
-            );
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
             const userId = 'user';
             const bojId = 'user';
 
