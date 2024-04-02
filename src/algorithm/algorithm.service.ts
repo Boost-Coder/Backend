@@ -63,6 +63,14 @@ export class AlgorithmService {
         await this.algorithmRepository.update(userId, algorithm);
     }
 
+    async removeAlgorithm(userId: string) {
+        const isExist = await this.algorithmRepository.findOneById(userId);
+        if (!isExist) {
+            throw new NotFoundException('algorithm not found');
+        }
+        await this.algorithmRepository.delete(userId);
+    }
+
     async getBOJInfo(bojId: string) {
         try {
             const res = await axios.get(URL + bojId);
