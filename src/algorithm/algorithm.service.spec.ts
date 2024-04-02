@@ -7,6 +7,8 @@ import { QueryFailedError } from 'typeorm';
 
 const mockAlgorithmRepository = {
     save: jest.fn(),
+    findOneById: jest.fn(),
+    update: jest.fn(),
 };
 
 jest.mock('axios');
@@ -122,6 +124,78 @@ describe('AlgorithmService', () => {
             await expect(
                 service.createAlgorithm(userId, bojId),
             ).rejects.toThrow('이미 등록했습니다.');
+        });
+    });
+
+    describe('modifyAlgorithm', function () {
+        it('should modify algorithm', async function () {
+            const userId = 'user';
+            const bojId = 'user1';
+            const algorithm = new Algorithm();
+            algorithm.userId = userId;
+            algorithm.bojId = 'user2';
+            algorithm.rating = 1500;
+            algorithm.tier = 16;
+            algorithm.solvedCount = 100;
+            algorithm.point = 0;
+            algorithmRepository.findOneById.mockResolvedValue(algorithm);
+
+            const mockResponse = {
+                data: {
+                    rating: 1600,
+                    tier: 17,
+                    solvedCount: 105,
+                },
+            };
+            (axios.get as jest.Mock).mockResolvedValue(mockResponse);
+            await service.modifyAlgorithm(userId, bojId);
+            const callProperty = algorithmRepository.update.mock.calls[0][1];
+            expect(callProperty.bojId).toEqual(bojId);
+            expect(callProperty.rating).toEqual(mockResponse.data.rating);
+            expect(callProperty.tier).toEqual(mockResponse.data.tier);
+            expect(callProperty.solvedCount).toEqual(
+                mockResponse.data.solvedCount,
+            );
+        });
+
+        it('userId 에 해당하는 알고리즘이 없는 경우 에러', async function () {
+            const userId = 'user';
+            const bojId = 'user1';
+            algorithmRepository.findOneById.mockResolvedValue(null);
+
+            await expect(
+                service.modifyAlgorithm(userId, bojId),
+            ).rejects.toThrow('Algorithm info not found');
+        });
+    });
+
+    describe('updateAlgorithm', function () {
+        it('should update', async function () {
+            const userId = 'user';
+            const algorithm = new Algorithm();
+            algorithm.userId = userId;
+            algorithm.bojId = 'user1';
+            algorithm.rating = 1500;
+            algorithm.tier = 16;
+            algorithm.solvedCount = 100;
+            algorithm.point = 0;
+            algorithmRepository.findOneById.mockResolvedValue(algorithm);
+
+            const mockResponse = {
+                data: {
+                    rating: 1600,
+                    tier: 17,
+                    solvedCount: 105,
+                },
+            };
+            (axios.get as jest.Mock).mockResolvedValue(mockResponse);
+            await service.updateAlgorithm(userId);
+            const callProperty = algorithmRepository.update.mock.calls[0][1];
+            expect(callProperty.rating).toEqual(mockResponse.data.rating);
+            expect(callProperty.tier).toEqual(mockResponse.data.tier);
+            expect(callProperty.solvedCount).toEqual(
+                mockResponse.data.solvedCount,
+            );
         });
     });
 });

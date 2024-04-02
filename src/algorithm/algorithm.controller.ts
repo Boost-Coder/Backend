@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { AlgorithmService } from './algorithm.service';
 import { CreateAlgorithmDto } from './createAlgorithm.dto';
 
@@ -10,5 +10,13 @@ export class AlgorithmController {
     async algorithmCreate(@Body() body: CreateAlgorithmDto) {
         const userId = 'user';
         await this.algorithmService.createAlgorithm(userId, body.bojId);
+    }
+
+    @Patch(':id')
+    async algorithmModify(
+        @Param('id') userId,
+        @Body() body: CreateAlgorithmDto,
+    ) {
+        await this.algorithmService.modifyAlgorithm(userId, body.bojId);
     }
 }
