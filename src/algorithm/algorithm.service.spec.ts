@@ -3,12 +3,12 @@ import { AlgorithmService } from './algorithm.service';
 import axios from 'axios';
 import { AlgorithmRepository } from './algorithm.repository';
 import { Algorithm } from '../Entity/algorithm';
-import { QueryFailedError } from 'typeorm';
 
 const mockAlgorithmRepository = {
     save: jest.fn(),
     findOneById: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
 };
 
 jest.mock('axios');
@@ -16,7 +16,7 @@ describe('AlgorithmService', () => {
     let service: AlgorithmService;
     let algorithmRepository;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AlgorithmService,
@@ -53,10 +53,10 @@ describe('AlgorithmService', () => {
             expect(res.tier).toEqual(16);
         });
 
-        it('should throw not found error', async function () {
-            (axios.get as jest.Mock).mockRejectedValue(
-                new Error('Failed to fetch'),
-            );
+        it('should throw not found error when bojId is incorrect', async function () {
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
 
             await expect(service.getBOJInfo('qwe')).rejects.toThrow(
                 'incorrect BOJ Id',
@@ -92,9 +92,9 @@ describe('AlgorithmService', () => {
         });
 
         it('백준 아이디가 없는 경우', async function () {
-            (axios.get as jest.Mock).mockRejectedValue(
-                new Error('Failed to fetch'),
-            );
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
             const userId = 'user';
             const bojId = 'user';
 
@@ -114,13 +114,7 @@ describe('AlgorithmService', () => {
             (axios.get as jest.Mock).mockResolvedValue(mockResponse);
             const userId = 'user';
             const bojId = 'user';
-            algorithmRepository.save.mockRejectedValue(
-                new QueryFailedError(
-                    'insert',
-                    [],
-                    new Error('Duplicate entry error'),
-                ),
-            );
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
             await expect(
                 service.createAlgorithm(userId, bojId),
             ).rejects.toThrow('이미 등록했습니다.');
@@ -195,6 +189,36 @@ describe('AlgorithmService', () => {
             expect(callProperty.tier).toEqual(mockResponse.data.tier);
             expect(callProperty.solvedCount).toEqual(
                 mockResponse.data.solvedCount,
+            );
+        });
+
+        it('백준 아이디가 solved.ac에서 삭제된 경우 스탯 초기화', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
+            (axios.get as jest.Mock).mockRejectedValue({
+                response: { status: 404 },
+            });
+            await service.updateAlgorithm(userId);
+
+            expect(algorithmRepository.delete).toHaveBeenCalled();
+        });
+    });
+
+    describe('removeAlgorithm', function () {
+        it('should remove', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(new Algorithm());
+
+            await service.removeAlgorithm(userId);
+
+            expect(algorithmRepository.delete).toHaveBeenCalled();
+        });
+
+        it('존재하지 않는 것을 지우려고 할 때 오류 발생', async function () {
+            const userId = 'user';
+            algorithmRepository.findOneById.mockResolvedValue(null);
+            await expect(service.removeAlgorithm(userId)).rejects.toThrow(
+                'algorithm not found',
             );
         });
     });
