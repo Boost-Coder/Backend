@@ -6,7 +6,6 @@ import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { AlgorithmModule } from './algorithm/algorithm.module';
 import { GithubModule } from './github/github.module';
-import { GitubController } from './gitub/gitub.controller';
 import * as process from 'process';
 
 @Module({
@@ -21,7 +20,7 @@ import * as process from 'process';
         AlgorithmModule,
         GithubModule,
     ],
-    controllers: [AppController, GitubController],
+    controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {}

@@ -12,4 +12,12 @@ export class GithubRepository extends BaseRepository {
         super(dataSource, req);
         this.repository = this.getRepository(Github);
     }
+
+    public async save(github: Github) {
+        this.repository.save(github);
+    }
+
+    public async findOne(id: number) {
+        return await this.repository.findOneBy({ githubId: id });
+    }
 }

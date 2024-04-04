@@ -1,23 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from './github.repository';
+import { Github } from '../Entity/github';
 
 @Injectable()
 export class GithubService {
-    private repository;
     constructor(
-        private readonly configService: ConfigService,
-        private readonly githubRepository: GithubRepository,
-    ) {
-        this.repository = githubRepository;
-    }
+        private configService: ConfigService,
+        private githubRepository: GithubRepository,
+    ) {}
     public async createGithub(code: string) {
-        const accessToken = await this.fetchAccessToken(code);
+        const [accessToken, refreshToken] = await this.fetchAccessToken(code);
         const userResource = await this.getUserResource(accessToken);
-        const calculated = this.calculateGithubPoint(userResource);
+
+        const isExist = await this.githubRepository.findOne(userResource.id);
+
+        if (isExist) {
+            throw new BadRequestException('이미 등록된 id 입니다');
+        }
+
+        const githubPoint = this.calculateGithubPoint(userResource);
+
+        const github = new Github();
+        github.userId = '123';
+        github.point = githubPoint;
+        github.accessToken = accessToken;
+        github.refreshToken = refreshToken;
+        github.githubId = userResource.id;
+        await this.githubRepository.save(github);
     }
 
-    public calculateGithubPoint(userResource: object) {}
+    public calculateGithubPoint(userResource: object) {
+        return 0;
+    }
 
     public async fetchAccessToken(authorization_code: string) {
         const ret = await fetch(
@@ -31,7 +46,7 @@ export class GithubService {
         );
 
         const returnData = await ret.json();
-        return returnData.access_token;
+        return [returnData.access_token, returnData.refresh_token];
     }
 
     public async getUserResource(accessToken: string) {
@@ -47,6 +62,6 @@ export class GithubService {
 
     public async saveMember(queryRunner, body) {
         console.log('service');
-        await this.repository.save(queryRunner, body);
+        //await this.repository.save(queryRunner, body);
     }
 }
