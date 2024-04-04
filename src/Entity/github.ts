@@ -19,6 +19,9 @@ export class Github {
     userId: string;
 
     @Column()
+    githubId: number;
+
+    @Column()
     point: number;
 
     @Column()
