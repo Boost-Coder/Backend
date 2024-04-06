@@ -17,7 +17,19 @@ export class GithubRepository extends BaseRepository {
         this.repository.save(github);
     }
 
-    public async findOne(id: number) {
-        return await this.repository.findOneBy({ githubId: id });
+    public async findOne(id: string) {
+        return await this.repository.findOneBy({ userId: id });
+    }
+
+    public async update(github: Github) {
+        return await this.repository.update(
+            { userId: github.userId },
+            {
+                githubId: github.githubId,
+                accessToken: github.accessToken,
+                refreshToken: github.refreshToken,
+                point: github.point,
+            },
+        );
     }
 }

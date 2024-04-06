@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from './github.repository';
 import { Github } from '../Entity/github';
+import { CreateGithubDto } from './createGitub.dto';
 
 @Injectable()
 export class GithubService {
@@ -9,10 +10,11 @@ export class GithubService {
         private configService: ConfigService,
         private githubRepository: GithubRepository,
     ) {}
-    public async createGithub(code: string) {
-        const [accessToken, refreshToken] = await this.fetchAccessToken(code);
-        const userResource = await this.getUserResource(accessToken);
 
+    public async redirect(code: string) {
+        const [accessToken, refreshToken] = await this.fetchAccessToken(code);
+        const userResource = await this.getUserResource(accessToken + '123');
+        console.log(userResource);
         const isExist = await this.githubRepository.findOne(userResource.id);
 
         if (isExist) {
@@ -30,6 +32,40 @@ export class GithubService {
         await this.githubRepository.save(github);
     }
 
+    public async createGithub(tokens: CreateGithubDto, userId: string) {
+        const userResource = await this.getUserResource(tokens.accessToken);
+
+        const isExist = await this.githubRepository.findOne(userId);
+
+        if (isExist) {
+            throw new BadRequestException('이미 등록된 id 입니다');
+        }
+
+        const githubPoint = this.calculateGithubPoint(userResource);
+
+        const github = new Github();
+        github.userId = userId;
+        github.point = githubPoint;
+        github.accessToken = tokens.accessToken;
+        github.refreshToken = tokens.refreshToken;
+        github.githubId = userResource.id;
+        await this.githubRepository.save(github);
+    }
+
+    public async modifyGithub(tokens: CreateGithubDto, userId: string) {
+        const userResource = await this.getUserResource(tokens.accessToken);
+        const githubPoint = this.calculateGithubPoint(userResource);
+
+        const github = new Github();
+        github.userId = userId;
+        github.point = githubPoint;
+        github.accessToken = tokens.accessToken;
+        github.refreshToken = tokens.refreshToken;
+        github.githubId = userResource.id;
+        await this.githubRepository.update(github);
+    }
+
+    public async updateGithub(tokens: CreateGithubDto, userId: string) {}
     public calculateGithubPoint(userResource: object) {
         return 0;
     }
@@ -51,17 +87,23 @@ export class GithubService {
 
     public async getUserResource(accessToken: string) {
         const resourceURL = 'https://api.github.com/user';
+
         const userResource = await fetch(resourceURL, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         });
 
-        return await userResource.json();
-    }
+        const userResourceJson = await userResource.json();
 
-    public async saveMember(queryRunner, body) {
-        console.log('service');
-        //await this.repository.save(queryRunner, body);
+        if (!userResourceJson.message) return userResourceJson;
+        else {
+            if (userResourceJson.message === 'Bad credentials') {
+                // 고민중
+                // 이 경우, accessToken 이 잘못된 경우인데, 이 경우는 서버 오류인가....
+            } else if (userResourceJson.message === 'Requires authentication') {
+                // token 이 포함되지 않음
+            }
+        }
     }
 }
