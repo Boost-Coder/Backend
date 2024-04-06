@@ -23,9 +23,7 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> envs/prod.env
       
       - name: Build docker image
-        uses: docker/build-push-action@v5.3.0
-        with:
-          tags: rankin:latest
+        run: docker build . -t rankin:latest
 
   deploy:
     needs: build
