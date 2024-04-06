@@ -43,5 +43,5 @@ jobs:
 
       - name: Run docker
         run: |
-          docker run -d -p 3000:3000 -v /var/rankin/logs:/app/logs rankin
+          docker run --name rankin -d -p 3000:3000 -v /var/rankin/logs:/app/logs rankin:latest
         
