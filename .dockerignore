@@ -1,0 +1,9 @@
+/logs
+/node_modules
+/dist
+/.git
+.github
+/coverage
+Dockerfile
+README.md
+.gitignore
