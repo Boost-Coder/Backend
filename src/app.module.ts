@@ -6,6 +6,7 @@ import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { AlgorithmModule } from './algorithm/algorithm.module';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import * as process from 'process';
 
 @Module({
@@ -19,6 +20,7 @@ import * as process from 'process';
         }),
         AlgorithmModule,
         AuthModule,
+        UserModule,
     ],
     controllers: [AppController],
     providers: [AppService],
