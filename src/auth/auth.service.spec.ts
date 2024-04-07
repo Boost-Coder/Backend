@@ -62,4 +62,27 @@ describe('AuthService', () => {
             });
         });
     });
+
+    describe('logInOrSignUp', function () {
+        const providerId = 'sample';
+        const user = new User();
+        user.userId = 'user';
+        user.providerId = providerId;
+        it('should login', async function () {
+            mockUserService.getUserByProviderId.mockResolvedValue(user);
+
+            await service.logInOrSignUp(providerId);
+
+            expect(mockUserService.createUser).not.toHaveBeenCalled();
+        });
+
+        it('should signup', async function () {
+            mockUserService.getUserByProviderId.mockResolvedValue(null);
+            mockUserService.createUser.mockResolvedValue(user);
+
+            await service.logInOrSignUp(providerId);
+
+            expect(mockUserService.createUser).toHaveBeenCalled();
+        });
+    });
 });
