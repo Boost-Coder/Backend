@@ -2,9 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
+import { UserService } from '../user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../Entity/user';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+    constructor(
+        private userService: UserService,
+        private jwtService: JwtService,
+        private configService: ConfigService,
+    ) {}
+
+    generateAccessToken(user: User): string {
+        return this.jwtService.sign({
+            userId: user.userId,
+        });
+    }
+
+    generateRefreshToken(user: User): string {
+        return this.jwtService.sign(
+            {
+                userId: user.userId,
+            },
+            {
+                secret: this.configService.get('JWT_REFRESH_SECRET'),
+                expiresIn: this.configService.get('JWT_REFRESH_EXPIRES_IN'),
+            },
+        );
+    }
+
     async validateAppleOAuth(appleLoginDto: AppleLoginDto): Promise<string> {
         const payloadClaims = this.decodeIdentityToken(
             appleLoginDto.identityToken,
