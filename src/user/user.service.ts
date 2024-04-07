@@ -16,7 +16,7 @@ export class UserService {
         const user = new User();
         user.providerId = providerId;
         user.userId = this.generateUserId();
-        await this.userRepository.save(user);
+        return await this.userRepository.save(user);
     }
 
     generateUserId() {
