@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
 import { User } from '../Entity/user';
+import { QueryFailedError } from 'typeorm';
 
 const mockUserRepository = {
     findOneByProviderId: jest.fn(),
@@ -56,6 +56,49 @@ describe('UserService', () => {
             const result = await service.getUserByProviderId(providerId);
 
             expect(result).toBeNull();
+        });
+    });
+
+    describe('createUser', function () {
+        const providerId = 'sample';
+        it('should create User', async function () {
+            await service.createUser(providerId);
+
+            expect(mockUserRepository.save).toHaveBeenCalled();
+        });
+
+        it('providerId 가 이미 존재하는 경우', async function () {
+            mockUserRepository.findOneByProviderId.mockResolvedValue(
+                new User(),
+            );
+            await expect(service.createUser(providerId)).rejects.toThrow(
+                'providerId 가 이미 존재함',
+            );
+        });
+
+        it('generateUserId 로 생성된 Id 가 이미 존재하는 경우', async function () {
+            const providerId = 'testProviderId';
+            const generatedUserId = '12345678';
+            const newUser = new User();
+            newUser.providerId = providerId;
+            newUser.userId = generatedUserId;
+
+            mockUserRepository.findOneByProviderId.mockResolvedValueOnce(null);
+            mockUserRepository.save = jest.fn();
+            mockUserRepository.save.mockRejectedValueOnce(
+                new QueryFailedError(
+                    'fake query',
+                    [],
+                    new Error('Duplicate entry error'),
+                ),
+            );
+
+            await service.createUser(providerId);
+
+            expect(mockUserRepository.findOneByProviderId).toHaveBeenCalledWith(
+                providerId,
+            );
+            expect(mockUserRepository.save).toHaveBeenCalledTimes(2);
         });
     });
 });
