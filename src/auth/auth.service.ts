@@ -15,6 +15,16 @@ export class AuthService {
         private configService: ConfigService,
     ) {}
 
+    async logInOrSignUp(providerId: string) {
+        let user = await this.userService.getUserByProviderId(providerId);
+        if (!user) {
+            user = await this.userService.createUser(providerId);
+        }
+        const accessToken = this.generateAccessToken(user);
+        const refreshToken = this.generateRefreshToken(user);
+        return { accessToken, refreshToken };
+    }
+
     generateAccessToken(user: User): string {
         return this.jwtService.sign({
             userId: user.userId,
