@@ -45,7 +45,7 @@ export class User {
         length: 320,
         unique: true,
     })
-    socialEmail: string;
+    providerId: string;
 
     @CreateDateColumn({
         type: 'timestamp',
