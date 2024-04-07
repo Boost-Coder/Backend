@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { User } from '../Entity/user';
 import { v4 as uuidv4 } from 'uuid';
+import { QueryFailedError } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -13,10 +14,27 @@ export class UserService {
     }
 
     async createUser(providerId: string) {
+        const isExist =
+            await this.userRepository.findOneByProviderId(providerId);
+        if (isExist) {
+            throw new ConflictException('providerId 가 이미 존재함');
+        }
         const user = new User();
         user.providerId = providerId;
         user.userId = this.generateUserId();
-        return await this.userRepository.save(user);
+        try {
+            return await this.userRepository.save(user);
+        } catch (e) {
+            if (
+                e instanceof QueryFailedError &&
+                e.message.includes('Duplicate entry')
+            ) {
+                user.userId = this.generateUserId();
+                return await this.userRepository.save(user);
+            } else {
+                throw e;
+            }
+        }
     }
 
     generateUserId() {
