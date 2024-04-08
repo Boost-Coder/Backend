@@ -34,8 +34,8 @@ export class GithubController {
         await this.githubService.deleteGithub(userId);
     }
 
-    @Get('redirect')
-    public async redirect(@Query('code') code: string) {
-        await this.githubService.redirect(code);
-    }
+    // @Get('redirect')
+    // public async redirect(@Query('code') code: string) {
+    //     await this.githubService.redirect(code);
+    // }
 }

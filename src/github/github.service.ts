@@ -102,22 +102,22 @@ export class GithubService {
         }
     }
 
-    public async redirect(code: string) {
-        const accessToken = await this.fetchAccessToken(code);
-        const userResource = await this.getUserResource(accessToken);
-        const isExist = await this.githubRepository.findOne(userResource.id);
-
-        if (isExist) {
-            throw new BadRequestException('이미 등록된 id 입니다');
-        }
-
-        const githubPoint = this.calculateGithubPoint(userResource);
-
-        const github = new Github();
-        github.userId = '123';
-        github.point = githubPoint;
-        github.accessToken = accessToken;
-        github.githubId = userResource.id;
-        await this.githubRepository.save(github);
-    }
+    // public async redirect(code: string) {
+    //     const accessToken = await this.fetchAccessToken(code);
+    //     const userResource = await this.getUserResource(accessToken);
+    //     const isExist = await this.githubRepository.findOne(userResource.id);
+    //
+    //     if (isExist) {
+    //         throw new BadRequestException('이미 등록된 id 입니다');
+    //     }
+    //
+    //     const githubPoint = this.calculateGithubPoint(userResource);
+    //
+    //     const github = new Github();
+    //     github.userId = '123';
+    //     github.point = githubPoint;
+    //     github.accessToken = accessToken;
+    //     github.githubId = userResource.id;
+    //     await this.githubRepository.save(github);
+    // }
 }
