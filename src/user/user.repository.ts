@@ -23,4 +23,8 @@ export class UserRepository extends BaseRepository {
     async save(user: User) {
         return await this.repository.save(user);
     }
+
+    async update(userId: string, user: User) {
+        return await this.repository.update({ userId: userId }, user);
+    }
 }
