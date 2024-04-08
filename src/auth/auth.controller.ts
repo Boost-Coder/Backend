@@ -11,6 +11,6 @@ export class AuthController {
         if (!providerId) {
             throw new UnauthorizedException('토큰이 유효하지 않음');
         }
-        return this.authService.logInOrSignUp(providerId);
+        return await this.authService.logInOrSignUp(providerId);
     }
 }
