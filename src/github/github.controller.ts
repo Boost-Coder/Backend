@@ -11,6 +11,7 @@ import { GithubService } from './github.service';
 import { CreateGithubDto } from './createGitub.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserId } from '../decorator/user-id.decorator';
+import { OwnershipGuard } from '../auth/ownership.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat/github')
@@ -22,6 +23,7 @@ export class GithubController {
         await this.githubService.createGithub(body, userId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Patch(':id')
     public async gitHubModify(
         @Param('id') userId: string,
@@ -30,6 +32,7 @@ export class GithubController {
         await this.githubService.modifyGithub(body, userId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Delete(':id')
     public async gitHubDelete(@Param('id') userId: string) {
         await this.githubService.deleteGithub(userId);
