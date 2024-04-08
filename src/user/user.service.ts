@@ -1,8 +1,13 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { User } from '../Entity/user';
 import { v4 as uuidv4 } from 'uuid';
 import { QueryFailedError } from 'typeorm';
+import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 
 @Injectable()
 export class UserService {
@@ -35,6 +40,21 @@ export class UserService {
                 throw e;
             }
         }
+    }
+
+    async updateUserInfo(userId: string, userInfoToUpdate: UpdateUserInfoDto) {
+        const user = await this.userRepository.findOneByUserId(userId);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        user.nickname = userInfoToUpdate.nickname;
+        user.major = userInfoToUpdate.major;
+        user.name = userInfoToUpdate.name;
+        user.studentId = userInfoToUpdate.studentId;
+        user.birthDate = userInfoToUpdate.birthDate;
+
+        await this.userRepository.update(userId, user);
     }
 
     generateUserId() {
