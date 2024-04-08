@@ -27,7 +27,6 @@ export class GithubRepository extends BaseRepository {
             {
                 githubId: github.githubId,
                 accessToken: github.accessToken,
-                refreshToken: github.refreshToken,
                 point: github.point,
             },
         );
