@@ -2,22 +2,23 @@ import {
     Body,
     Controller,
     Delete,
-    Get,
     Param,
     Patch,
     Post,
-    Query,
+    UseGuards,
 } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { CreateGithubDto } from './createGitub.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UserId } from '../decorator/user-id.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/stat/github')
 export class GithubController {
     constructor(private readonly githubService: GithubService) {}
 
     @Post()
-    public async gitHubCreate(@Body() body: CreateGithubDto) {
-        const userId = '123';
+    public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
     }
 
