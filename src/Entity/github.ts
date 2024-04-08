@@ -27,7 +27,9 @@ export class Github {
     @Column()
     accessToken: string;
 
-    @Column()
+    @Column({
+        nullable: true,
+    })
     refreshToken: string;
 
     @OneToOne(() => User, (user) => user.userId)

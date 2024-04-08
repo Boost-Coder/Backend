@@ -15,9 +15,9 @@ import { CreateGithubDto } from './createGitub.dto';
 export class GithubController {
     constructor(private readonly githubService: GithubService) {}
 
-    @Post(':id')
+    @Post()
     public async gitHubCreate(@Body() body: CreateGithubDto) {
-        const userId = 'userId';
+        const userId = '123';
         await this.githubService.createGithub(body, userId);
     }
 
@@ -34,8 +34,8 @@ export class GithubController {
         await this.githubService.deleteGithub(userId);
     }
 
-    // @Get('redirect')
-    // public async redirect(@Query('code') code: string) {
-    //     await this.githubService.redirect(code);
-    // }
+    @Get('redirect')
+    public async redirect(@Query('code') code: string) {
+        await this.githubService.redirect(code);
+    }
 }

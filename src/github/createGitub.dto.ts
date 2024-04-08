@@ -5,7 +5,5 @@ export class CreateGithubDto {
     @IsNotEmpty()
     accessToken: string;
 
-    @IsString()
-    @IsNotEmpty()
     refreshToken: string;
 }

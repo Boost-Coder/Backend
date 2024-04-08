@@ -77,12 +77,11 @@ export class GithubService {
         );
 
         const returnData = await ret.json();
-        return [returnData.access_token, returnData.refresh_token];
+        return returnData.access_token;
     }
 
     public async getUserResource(accessToken: string) {
         const resourceURL = 'https://api.github.com/user';
-
         const userResource = await fetch(resourceURL, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -94,30 +93,31 @@ export class GithubService {
         if (!userResourceJson.message) return userResourceJson;
         else {
             if (userResourceJson.message === 'Bad credentials') {
-                this.logger.log('AccessToken 에 문제가 있음');
+                this.logger.error('AccessToken 에 문제가 있음');
             } else if (userResourceJson.message === 'Requires authentication') {
-                this.logger.log('Auth Header 에 AccessToken 이 포함되지 않음');
+                this.logger.error(
+                    'Auth Header 에 AccessToken 이 포함되지 않음',
+                );
             }
         }
     }
 
-    // public async redirect(code: string) {
-    //     const [accessToken, refreshToken] = await this.fetchAccessToken(code);
-    //     const userResource = await this.getUserResource(accessToken + '123');
-    //     const isExist = await this.githubRepository.findOne(userResource.id);
-    //
-    //     if (isExist) {
-    //         throw new BadRequestException('이미 등록된 id 입니다');
-    //     }
-    //
-    //     const githubPoint = this.calculateGithubPoint(userResource);
-    //
-    //     const github = new Github();
-    //     github.userId = '123';
-    //     github.point = githubPoint;
-    //     github.accessToken = accessToken;
-    //     github.refreshToken = refreshToken;
-    //     github.githubId = userResource.id;
-    //     await this.githubRepository.save(github);
-    // }
+    public async redirect(code: string) {
+        const accessToken = await this.fetchAccessToken(code);
+        const userResource = await this.getUserResource(accessToken);
+        const isExist = await this.githubRepository.findOne(userResource.id);
+
+        if (isExist) {
+            throw new BadRequestException('이미 등록된 id 입니다');
+        }
+
+        const githubPoint = this.calculateGithubPoint(userResource);
+
+        const github = new Github();
+        github.userId = '123';
+        github.point = githubPoint;
+        github.accessToken = accessToken;
+        github.githubId = userResource.id;
+        await this.githubRepository.save(github);
+    }
 }
