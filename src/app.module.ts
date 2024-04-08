@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { AlgorithmModule } from './algorithm/algorithm.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import { GithubModule } from './github/github.module';
 import * as process from 'process';
 
@@ -18,6 +20,8 @@ import * as process from 'process';
             envFilePath: `${process.cwd()}/envs/${process.env.NODE_ENV}.env`,
         }),
         AlgorithmModule,
+        AuthModule,
+        UserModule,
         GithubModule,
     ],
     controllers: [AppController],

@@ -25,27 +25,30 @@ export class User {
 
     @Column({
         length: 30,
+        nullable: true,
     })
     nickname: string;
 
     @Column({
         length: 30,
+        nullable: true,
     })
     major: string;
 
     @Column({
         length: 30,
+        nullable: true,
     })
     name: string;
 
-    @Column({ unique: true })
+    @Column({ unique: true, nullable: true })
     studentId: number;
 
     @Column({
         length: 320,
         unique: true,
     })
-    socialEmail: string;
+    providerId: string;
 
     @CreateDateColumn({
         type: 'timestamp',
