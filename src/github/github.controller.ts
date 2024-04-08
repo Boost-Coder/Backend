@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Param,
     Patch,
@@ -14,19 +15,27 @@ import { CreateGithubDto } from './createGitub.dto';
 export class GithubController {
     constructor(private readonly githubService: GithubService) {}
 
-    @Get('redirect')
-    public redirect(@Query('code') code: string) {
-        this.githubService.redirect(code);
-    }
     @Post(':id')
-    public gitHubCreate(@Body() body: CreateGithubDto) {
+    public async gitHubCreate(@Body() body: CreateGithubDto) {
         const userId = 'userId';
-        this.githubService.createGithub(body, userId);
+        await this.githubService.createGithub(body, userId);
     }
 
     @Patch(':id')
-    public gitHubModify(@Body() body: CreateGithubDto) {
-        const userId = 'userId';
-        this.githubService.modifyGithub(body, userId);
+    public async gitHubModify(
+        @Param('id') userId: string,
+        @Body() body: CreateGithubDto,
+    ) {
+        await this.githubService.modifyGithub(body, userId);
     }
+
+    @Delete(':id')
+    public async gitHubDelete(@Param('id') userId: string) {
+        await this.githubService.deleteGithub(userId);
+    }
+
+    // @Get('redirect')
+    // public async redirect(@Query('code') code: string) {
+    //     await this.githubService.redirect(code);
+    // }
 }

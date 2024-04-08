@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from './github.repository';
 import { Github } from '../Entity/github';
@@ -6,31 +6,11 @@ import { CreateGithubDto } from './createGitub.dto';
 
 @Injectable()
 export class GithubService {
+    private logger = new Logger();
     constructor(
         private configService: ConfigService,
         private githubRepository: GithubRepository,
     ) {}
-
-    public async redirect(code: string) {
-        const [accessToken, refreshToken] = await this.fetchAccessToken(code);
-        const userResource = await this.getUserResource(accessToken + '123');
-        console.log(userResource);
-        const isExist = await this.githubRepository.findOne(userResource.id);
-
-        if (isExist) {
-            throw new BadRequestException('이미 등록된 id 입니다');
-        }
-
-        const githubPoint = this.calculateGithubPoint(userResource);
-
-        const github = new Github();
-        github.userId = '123';
-        github.point = githubPoint;
-        github.accessToken = accessToken;
-        github.refreshToken = refreshToken;
-        github.githubId = userResource.id;
-        await this.githubRepository.save(github);
-    }
 
     public async createGithub(tokens: CreateGithubDto, userId: string) {
         const userResource = await this.getUserResource(tokens.accessToken);
@@ -65,7 +45,22 @@ export class GithubService {
         await this.githubRepository.update(github);
     }
 
-    public async updateGithub(tokens: CreateGithubDto, userId: string) {}
+    public async updateGithubList() {
+        const userGithubList = await this.githubRepository.findAll();
+
+        for (let i = 0; i < userGithubList.length; i++) {
+            const userResource = await this.getUserResource(
+                userGithubList[i].accessToken,
+            );
+
+            userGithubList[i].point = this.calculateGithubPoint(userResource);
+            await this.githubRepository.update(userGithubList[i]);
+        }
+    }
+
+    public async deleteGithub(userId: string) {
+        await this.githubRepository.delete(userId);
+    }
     public calculateGithubPoint(userResource: object) {
         return 0;
     }
@@ -99,11 +94,30 @@ export class GithubService {
         if (!userResourceJson.message) return userResourceJson;
         else {
             if (userResourceJson.message === 'Bad credentials') {
-                // 고민중
-                // 이 경우, accessToken 이 잘못된 경우인데, 이 경우는 서버 오류인가....
+                this.logger.log('AccessToken 에 문제가 있음');
             } else if (userResourceJson.message === 'Requires authentication') {
-                // token 이 포함되지 않음
+                this.logger.log('Auth Header 에 AccessToken 이 포함되지 않음');
             }
         }
     }
+
+    // public async redirect(code: string) {
+    //     const [accessToken, refreshToken] = await this.fetchAccessToken(code);
+    //     const userResource = await this.getUserResource(accessToken + '123');
+    //     const isExist = await this.githubRepository.findOne(userResource.id);
+    //
+    //     if (isExist) {
+    //         throw new BadRequestException('이미 등록된 id 입니다');
+    //     }
+    //
+    //     const githubPoint = this.calculateGithubPoint(userResource);
+    //
+    //     const github = new Github();
+    //     github.userId = '123';
+    //     github.point = githubPoint;
+    //     github.accessToken = accessToken;
+    //     github.refreshToken = refreshToken;
+    //     github.githubId = userResource.id;
+    //     await this.githubRepository.save(github);
+    // }
 }

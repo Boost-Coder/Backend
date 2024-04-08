@@ -4,7 +4,7 @@ import { Github } from '../Entity/github';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
 
-@Injectable({ scope: Scope.REQUEST })
+@Injectable()
 export class GithubRepository extends BaseRepository {
     private repository: Repository<Github>;
 
@@ -14,7 +14,7 @@ export class GithubRepository extends BaseRepository {
     }
 
     public async save(github: Github) {
-        this.repository.save(github);
+        await this.repository.save(github);
     }
 
     public async findOne(id: string) {
@@ -31,5 +31,13 @@ export class GithubRepository extends BaseRepository {
                 point: github.point,
             },
         );
+    }
+
+    public async delete(id: string) {
+        await this.repository.delete({ userId: id });
+    }
+
+    public async findAll() {
+        return await this.repository.find();
     }
 }
