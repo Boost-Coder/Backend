@@ -48,13 +48,17 @@ export class UserService {
             throw new NotFoundException('User not found');
         }
 
+        this.changeUserInfo(user, userInfoToUpdate);
+
+        await this.userRepository.update(userId, user);
+    }
+
+    changeUserInfo(user: User, userInfoToUpdate: UpdateUserInfoDto) {
         user.nickname = userInfoToUpdate.nickname;
         user.major = userInfoToUpdate.major;
         user.name = userInfoToUpdate.name;
         user.studentId = userInfoToUpdate.studentId;
         user.birthDate = userInfoToUpdate.birthDate;
-
-        await this.userRepository.update(userId, user);
     }
 
     generateUserId() {
