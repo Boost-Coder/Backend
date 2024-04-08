@@ -65,6 +65,14 @@ export class GithubService {
     }
 
     public async deleteGithub(userId: string) {
+        const isExist = await this.githubRepository.findOne(userId);
+
+        if (!isExist) {
+            throw new BadRequestException(
+                '유저의 Github 정보를 찾을 수 없습니다',
+            );
+        }
+
         await this.githubRepository.delete(userId);
     }
     public calculateGithubPoint(userResource: object) {
