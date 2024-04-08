@@ -9,9 +9,9 @@ import {
 } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { CreateGithubDto } from './createGitub.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { UserId } from '../decorator/user-id.decorator';
-import { OwnershipGuard } from '../auth/ownership.guard';
+import { OwnershipGuard } from '../auth/guard/ownership.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat/github')
