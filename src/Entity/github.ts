@@ -27,11 +27,6 @@ export class Github {
     @Column()
     accessToken: string;
 
-    @Column({
-        nullable: true,
-    })
-    refreshToken: string;
-
     @OneToOne(() => User, (user) => user.userId)
     @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
     user: User;

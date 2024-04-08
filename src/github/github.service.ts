@@ -27,7 +27,6 @@ export class GithubService {
         github.userId = userId;
         github.point = githubPoint;
         github.accessToken = tokens.accessToken;
-        github.refreshToken = tokens.refreshToken;
         github.githubId = userResource.id;
         await this.githubRepository.save(github);
     }
@@ -36,11 +35,18 @@ export class GithubService {
         const userResource = await this.getUserResource(tokens.accessToken);
         const githubPoint = this.calculateGithubPoint(userResource);
 
+        const isExist = await this.githubRepository.findOne(userId);
+
+        if (!isExist) {
+            throw new BadRequestException(
+                '유저의 Github 정보를 찾을 수 없습니다',
+            );
+        }
+
         const github = new Github();
         github.userId = userId;
         github.point = githubPoint;
         github.accessToken = tokens.accessToken;
-        github.refreshToken = tokens.refreshToken;
         github.githubId = userResource.id;
         await this.githubRepository.update(github);
     }
