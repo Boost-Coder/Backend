@@ -19,13 +19,13 @@ export class Github {
     userId: string;
 
     @Column()
+    githubId: number;
+
+    @Column()
     point: number;
 
     @Column()
     accessToken: string;
-
-    @Column()
-    refreshToken: string;
 
     @OneToOne(() => User, (user) => user.userId)
     @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
