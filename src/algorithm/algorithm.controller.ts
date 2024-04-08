@@ -11,6 +11,7 @@ import { AlgorithmService } from './algorithm.service';
 import { CreateAlgorithmDto } from './createAlgorithm.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UserId } from '../decorator/user-id.decorator';
+import { OwnershipGuard } from '../auth/ownership.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat/algorithm')
@@ -22,6 +23,7 @@ export class AlgorithmController {
         await this.algorithmService.createAlgorithm(userId, body.bojId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Patch(':id')
     async algorithmModify(
         @Param('id') userId,
@@ -30,6 +32,7 @@ export class AlgorithmController {
         await this.algorithmService.modifyAlgorithm(userId, body.bojId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Delete(':id')
     async algorithmRemove(@Param('id') userId) {
         await this.algorithmService.removeAlgorithm(userId);
