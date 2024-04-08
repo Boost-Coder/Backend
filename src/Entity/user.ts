@@ -44,6 +44,9 @@ export class User {
     @Column({ unique: true, nullable: true })
     studentId: number;
 
+    @Column({ type: 'date', nullable: true })
+    birthDate: Date;
+
     @Column({
         length: 320,
         unique: true,
