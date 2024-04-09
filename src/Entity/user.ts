@@ -68,15 +68,19 @@ export class User {
     @DeleteDateColumn()
     deleteDate: Date;
 
-    @OneToOne(() => Github, (github) => github.userId)
+    @OneToOne(() => Github, (github) => github.userId, { cascade: ['remove'] })
     github: Github;
 
-    @OneToOne(() => Algorithm, (algorithm) => algorithm.userId)
+    @OneToOne(() => Algorithm, (algorithm) => algorithm.userId, {
+        cascade: ['remove'],
+    })
     algorithm: Algorithm;
 
-    @OneToOne(() => Grade, (grade) => grade.userId)
+    @OneToOne(() => Grade, (grade) => grade.userId, { cascade: ['remove'] })
     grade: Grade;
 
-    @OneToOne(() => TotalPoint, (totalPoint) => totalPoint.userId)
+    @OneToOne(() => TotalPoint, (totalPoint) => totalPoint.userId, {
+        cascade: ['remove'],
+    })
     totalScore: TotalPoint;
 }
