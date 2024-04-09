@@ -13,12 +13,12 @@ import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 export class UserService {
     constructor(private userRepository: UserRepository) {}
 
-    async getUserByProviderId(providerId: string) {
+    async findUserByProviderId(providerId: string) {
         const user = await this.userRepository.findOneByProviderId(providerId);
         return user;
     }
 
-    async findUserById(userId: string) {
+    async findUserByUserId(userId: string) {
         const user = await this.userRepository.findOneByUserId(userId);
         if (!user) {
             throw new NotFoundException('User Not Found');

@@ -11,7 +11,7 @@ export class UserController {
 
     @Get(':id')
     async userFind(@Param('id') userId: string) {
-        return await this.userService.findUserById(userId);
+        return await this.userService.findUserByUserId(userId);
     }
 
     @UseGuards(OwnershipGuard)
