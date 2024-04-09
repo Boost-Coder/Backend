@@ -19,7 +19,20 @@ export class GradeService {
         await this.gradeRepository.save(newGrade);
     }
 
-    public async gradeModify(userId: string, grade: number) {}
+    public async gradeModify(userId: string, grade: number) {
+        const isExist = await this.gradeRepository.findOne(userId);
+
+        if (!isExist) {
+            throw new BadRequestException('등록된 학점정보가 없습니다');
+        }
+
+        const newGrade = new Grade();
+        newGrade.userId = userId;
+        newGrade.grade = grade;
+        newGrade.point = this.calculatePoint(grade);
+
+        await this.gradeRepository.save(newGrade);
+    }
 
     public async gradeDelete() {}
 
