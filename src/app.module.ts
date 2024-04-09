@@ -8,6 +8,9 @@ import { AlgorithmModule } from './algorithm/algorithm.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { GithubModule } from './github/github.module';
+import { GadeController } from './gade/gade.controller';
+import { GradeController } from './grade/grade.controller';
+import { GradeService } from './grade/grade.service';
 import * as process from 'process';
 
 @Module({
@@ -24,7 +27,7 @@ import * as process from 'process';
         UserModule,
         GithubModule,
     ],
-    controllers: [AppController],
-    providers: [AppService],
+    controllers: [AppController, GadeController, GradeController],
+    providers: [AppService, GradeService],
 })
 export class AppModule {}
