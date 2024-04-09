@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { GradeRepository } from './grade.repository';
 import { Grade } from '../Entity/grade';
 
@@ -23,7 +27,7 @@ export class GradeService {
         const isExist = await this.gradeRepository.findOne(userId);
 
         if (!isExist) {
-            throw new BadRequestException('등록된 학점정보가 없습니다');
+            throw new NotFoundException('등록된 학점정보가 없습니다');
         }
 
         const newGrade = new Grade();
@@ -34,7 +38,15 @@ export class GradeService {
         await this.gradeRepository.update(newGrade);
     }
 
-    public async gradeDelete() {}
+    public async gradeDelete(userId: string) {
+        const isExist = await this.gradeRepository.findOne(userId);
+
+        if (!isExist) {
+            throw new NotFoundException('등록된 학점정보가 없습니다');
+        }
+
+        await this.gradeRepository.delete(userId);
+    }
 
     public calculatePoint(grade: number) {
         return 0;

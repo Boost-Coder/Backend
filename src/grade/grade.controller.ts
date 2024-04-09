@@ -35,7 +35,7 @@ export class GradeController {
 
     @Delete(':id')
     @UseGuards(OwnershipGuard)
-    public async deleteGrade() {
-        await this.gradeService.gradeDelete();
+    public async deleteGrade(@Param('id') userId: string) {
+        await this.gradeService.gradeDelete(userId);
     }
 }
