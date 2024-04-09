@@ -2,25 +2,28 @@ import {
     Body,
     Controller,
     Delete,
-    Get,
     Param,
     Patch,
     Post,
-    Query,
+    UseGuards,
 } from '@nestjs/common';
 import { GithubService } from './github.service';
 import { CreateGithubDto } from './createGitub.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
+import { UserId } from '../decorator/user-id.decorator';
+import { OwnershipGuard } from '../auth/guard/ownership.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('api/stat/github')
 export class GithubController {
     constructor(private readonly githubService: GithubService) {}
 
     @Post()
-    public async gitHubCreate(@Body() body: CreateGithubDto) {
-        const userId = '123';
+    public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Patch(':id')
     public async gitHubModify(
         @Param('id') userId: string,
@@ -29,6 +32,7 @@ export class GithubController {
         await this.githubService.modifyGithub(body, userId);
     }
 
+    @UseGuards(OwnershipGuard)
     @Delete(':id')
     public async gitHubDelete(@Param('id') userId: string) {
         await this.githubService.deleteGithub(userId);
