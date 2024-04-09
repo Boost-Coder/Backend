@@ -1,14 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { AlgorithmRepository } from '../algorithm/algorithm.repository';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import mock = jest.mock;
 import { User } from '../Entity/user';
 
 const mockUserService = {
-    getUserByProviderId: jest.fn(),
+    findUserByProviderId: jest.fn(),
     createUser: jest.fn(),
 };
 
@@ -69,7 +67,7 @@ describe('AuthService', () => {
         user.userId = 'user';
         user.providerId = providerId;
         it('should login', async function () {
-            mockUserService.getUserByProviderId.mockResolvedValue(user);
+            mockUserService.findUserByProviderId.mockResolvedValue(user);
 
             await service.logInOrSignUp(providerId);
 
@@ -77,7 +75,7 @@ describe('AuthService', () => {
         });
 
         it('should signup', async function () {
-            mockUserService.getUserByProviderId.mockResolvedValue(null);
+            mockUserService.findUserByProviderId.mockResolvedValue(null);
             mockUserService.createUser.mockResolvedValue(user);
 
             await service.logInOrSignUp(providerId);

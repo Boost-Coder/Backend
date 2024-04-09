@@ -16,7 +16,7 @@ export class AuthService {
     ) {}
 
     async logInOrSignUp(providerId: string) {
-        let user = await this.userService.getUserByProviderId(providerId);
+        let user = await this.userService.findUserByProviderId(providerId);
         if (!user) {
             user = await this.userService.createUser(providerId);
         }
