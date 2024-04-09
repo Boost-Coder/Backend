@@ -28,11 +28,7 @@ export class UserRepository extends BaseRepository {
         return await this.repository.update({ userId: userId }, user);
     }
 
-    async delete(userId: string) {
-        const user = await this.repository.findOne({
-            where: { userId: userId },
-            relations: ['github', 'algorithm', 'grade', 'totalScore'],
-        });
+    async delete(user: User) {
         await this.repository.remove(user);
     }
 }
