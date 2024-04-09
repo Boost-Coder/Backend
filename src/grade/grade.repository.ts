@@ -22,7 +22,15 @@ export class GradeRepository extends BaseRepository {
         return await this.repository.findOneBy({ userId: id });
     }
 
-    public async update(github: Github) {}
+    public async update(newGrade: Grade) {
+        return await this.repository.update(
+            { userId: newGrade.userId },
+            {
+                grade: newGrade.grade,
+                point: newGrade.point,
+            },
+        );
+    }
 
     public async delete(id: string) {}
 }
