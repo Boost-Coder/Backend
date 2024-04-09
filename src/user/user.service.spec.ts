@@ -3,10 +3,13 @@ import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { User } from '../Entity/user';
 import { QueryFailedError } from 'typeorm';
+import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 
 const mockUserRepository = {
     findOneByProviderId: jest.fn(),
     save: jest.fn(),
+    findOneByUserId: jest.fn(),
+    update: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -99,6 +102,56 @@ describe('UserService', () => {
                 providerId,
             );
             expect(mockUserRepository.save).toHaveBeenCalledTimes(2);
+        });
+    });
+
+    describe('changeUserInfo', function () {
+        it('should change user`s info', function () {
+            const user = new User();
+            const userInfoToUpdate = new UpdateUserInfoDto();
+            userInfoToUpdate.nickname = 'nickname';
+            userInfoToUpdate.major = 'major';
+            userInfoToUpdate.name = 'name';
+            userInfoToUpdate.studentId = 1234;
+            userInfoToUpdate.birthDate = new Date();
+
+            service.changeUserInfo(user, userInfoToUpdate);
+
+            expect(user.nickname).toEqual('nickname');
+            expect(user.major).toEqual('major');
+            expect(user.name).toEqual('name');
+            expect(user.studentId).toEqual(1234);
+        });
+    });
+
+    describe('updateUserInfo', function () {
+        it('수정하려는 user가 없는 경우 예외 발생', async function () {
+            const userId = 'user';
+            const userInfoToUpdate = new UpdateUserInfoDto();
+            mockUserRepository.findOneByUserId.mockResolvedValue(null);
+
+            await expect(
+                service.updateUserInfo(userId, userInfoToUpdate),
+            ).rejects.toThrow('User not found');
+        });
+
+        it('should update user info', async function () {
+            const userId = 'user';
+            const userInfoToUpdate = new UpdateUserInfoDto();
+            userInfoToUpdate.nickname = 'nickname';
+            userInfoToUpdate.major = 'major';
+            userInfoToUpdate.name = 'name';
+            userInfoToUpdate.studentId = 1234;
+            userInfoToUpdate.birthDate = new Date();
+            const user = new User();
+            mockUserRepository.findOneByUserId.mockResolvedValue(user);
+
+            await service.updateUserInfo(userId, userInfoToUpdate);
+            const callProperty = mockUserRepository.update.mock.calls[0][1];
+            expect(mockUserRepository.update).toHaveBeenCalled();
+            expect(callProperty.nickname).toEqual('nickname');
+            expect(callProperty.major).toEqual('major');
+            expect(callProperty.name).toEqual('name');
         });
     });
 });

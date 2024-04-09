@@ -16,7 +16,15 @@ export class UserRepository extends BaseRepository {
         return await this.repository.findOneBy({ providerId: providerId });
     }
 
+    async findOneByUserId(userId: string) {
+        return await this.repository.findOneBy({ userId: userId });
+    }
+
     async save(user: User) {
         return await this.repository.save(user);
+    }
+
+    async update(userId: string, user: User) {
+        return await this.repository.update({ userId: userId }, user);
     }
 }
