@@ -18,6 +18,21 @@ export class UserService {
         return user;
     }
 
+    async findUserById(userId: string) {
+        const user = await this.userRepository.findOneByUserId(userId);
+        if (!user) {
+            throw new NotFoundException('User Not Found');
+        }
+
+        return {
+            userId: user.userId,
+            nickname: user.nickname,
+            major: user.major,
+            name: user.name,
+            studentId: user.studentId,
+        };
+    }
+
     async createUser(providerId: string) {
         const isExist =
             await this.userRepository.findOneByProviderId(providerId);
