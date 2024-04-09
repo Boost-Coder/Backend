@@ -27,7 +27,7 @@ export class Github {
     @Column()
     accessToken: string;
 
-    @OneToOne(() => User, (user) => user.userId)
+    @OneToOne(() => User, (user) => user.userId, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
     user: User;
 }
