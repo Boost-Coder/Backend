@@ -7,7 +7,6 @@ import {
     Post,
     UseGuards,
 } from '@nestjs/common';
-import { Grade } from '../Entity/grade';
 import { GradeService } from './grade.service';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { OwnershipGuard } from '../auth/guard/ownership.guard';

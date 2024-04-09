@@ -4,7 +4,7 @@ import { Grade } from '../Entity/grade';
 
 @Injectable()
 export class GradeService {
-    constructor(private readonly gradeRepository: GradeRepository) {}
+    constructor(private gradeRepository: GradeRepository) {}
     public async gradeCreate(userId: string, grade: number) {
         const isExist = await this.gradeRepository.findOne(userId);
 

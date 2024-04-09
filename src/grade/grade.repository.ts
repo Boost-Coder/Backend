@@ -11,6 +11,7 @@ export class GradeRepository extends BaseRepository {
 
     constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
         super(dataSource, req);
+        this.repository = this.getRepository(Grade);
     }
 
     public async save(grade: Grade) {
