@@ -32,5 +32,7 @@ export class GradeRepository extends BaseRepository {
         );
     }
 
-    public async delete(id: string) {}
+    public async delete(id: string) {
+        await this.repository.delete({ userId: id });
+    }
 }
