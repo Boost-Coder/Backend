@@ -31,7 +31,7 @@ export class GradeService {
         newGrade.grade = grade;
         newGrade.point = this.calculatePoint(grade);
 
-        await this.gradeRepository.save(newGrade);
+        await this.gradeRepository.update(newGrade);
     }
 
     public async gradeDelete() {}
