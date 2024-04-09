@@ -48,7 +48,7 @@ describe('UserService', () => {
             user.providerId = providerId;
             mockUserRepository.findOneByProviderId.mockResolvedValue(user);
 
-            const result = await service.getUserByProviderId(providerId);
+            const result = await service.findUserByProviderId(providerId);
 
             expect(result.providerId).toEqual(providerId);
         });
@@ -56,7 +56,7 @@ describe('UserService', () => {
         it('일치하는 user 가 없는 경우', async function () {
             mockUserRepository.findOneByProviderId.mockResolvedValue(null);
 
-            const result = await service.getUserByProviderId(providerId);
+            const result = await service.findUserByProviderId(providerId);
 
             expect(result).toBeNull();
         });
@@ -152,6 +152,33 @@ describe('UserService', () => {
             expect(callProperty.nickname).toEqual('nickname');
             expect(callProperty.major).toEqual('major');
             expect(callProperty.name).toEqual('name');
+        });
+    });
+
+    describe('findUserByUserId', function () {
+        it('should find user and return user info', async function () {
+            const userId = 'qwerty';
+            const user = new User();
+            user.userId = userId;
+            user.studentId = 1234;
+            user.major = 'qwe';
+            user.name = 'user';
+            user.nickname = 'nickname';
+            mockUserRepository.findOneByUserId.mockResolvedValue(user);
+
+            const result = await service.findUserByUserId(userId);
+
+            expect(result.userId).toEqual(userId);
+            expect(result.studentId).toEqual(1234);
+        });
+
+        it('should throw NotFound Exception when uses doesn`t exist', function () {
+            mockUserRepository.findOneByUserId.mockResolvedValue(null);
+            const userId = 'qwerty';
+
+            expect(service.findUserByUserId(userId)).rejects.toThrow(
+                'User Not Found',
+            );
         });
     });
 });
