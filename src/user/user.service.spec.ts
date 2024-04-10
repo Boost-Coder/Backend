@@ -10,6 +10,8 @@ const mockUserRepository = {
     save: jest.fn(),
     findOneByUserId: jest.fn(),
     update: jest.fn(),
+    findOneWithStats: jest.fn(),
+    delete: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -152,6 +154,26 @@ describe('UserService', () => {
             expect(callProperty.nickname).toEqual('nickname');
             expect(callProperty.major).toEqual('major');
             expect(callProperty.name).toEqual('name');
+        });
+    });
+
+    describe('removeUser', function () {
+        it('should delete user', async function () {
+            const userId = 'user';
+            const user = new User();
+            mockUserRepository.findOneWithStats.mockResolvedValue(user);
+
+            await service.removeUser(userId);
+
+            expect(mockUserRepository.delete).toHaveBeenCalledWith(user);
+        });
+
+        it('should throw Not Found Error', function () {
+            const userId = 'user';
+            mockUserRepository.findOneWithStats.mockResolvedValue(null);
+            expect(service.removeUser(userId)).rejects.toThrow(
+                'User Not Found',
+            );
         });
     });
 });
