@@ -20,6 +20,13 @@ export class UserRepository extends BaseRepository {
         return await this.repository.findOneBy({ userId: userId });
     }
 
+    async findOneWithStats(userId: string) {
+        return await this.repository.findOne({
+            where: { userId: userId },
+            relations: ['github', 'algorithm', 'grade', 'totalScore'],
+        });
+    }
+
     async save(user: User) {
         return await this.repository.save(user);
     }

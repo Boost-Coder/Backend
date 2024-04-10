@@ -62,10 +62,7 @@ export class UserService {
     }
 
     async removeUser(userId: string) {
-        const user = await this.userRepository.getRepository(User).findOne({
-            where: { userId: userId },
-            relations: ['github', 'algorithm', 'grade', 'totalScore'],
-        });
+        const user = await this.userRepository.findOneWithStats(userId);
         if (!user) {
             throw new NotFoundException('User Not Found');
         }
