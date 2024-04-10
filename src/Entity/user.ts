@@ -65,9 +65,6 @@ export class User {
     })
     updateDate: Date;
 
-    @DeleteDateColumn()
-    deleteDate: Date;
-
     @OneToOne(() => Github, (github) => github.user, { cascade: ['remove'] })
     github: Github;
 
