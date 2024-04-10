@@ -20,6 +20,9 @@ export interface BOJInfo {
 export class AlgorithmService {
     private logger = new Logger(AlgorithmService.name);
     constructor(private algorithmRepository: AlgorithmRepository) {}
+    async findAlgorithm(userId: string) {
+        return await this.algorithmRepository.findOneById(userId);
+    }
     async createAlgorithm(userId: string, bojId: string) {
         const bojInfo = await this.getBOJInfo(bojId);
         const isExist = await this.algorithmRepository.findOneById(userId);
