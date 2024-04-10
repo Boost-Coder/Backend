@@ -9,6 +9,11 @@ import { Grade } from '../Entity/grade';
 @Injectable()
 export class GradeService {
     constructor(private gradeRepository: GradeRepository) {}
+
+    async findGrade(userId: string) {
+        return await this.gradeRepository.findOne(userId);
+    }
+
     public async gradeCreate(userId: string, grade: number) {
         const isExist = await this.gradeRepository.findOne(userId);
 
