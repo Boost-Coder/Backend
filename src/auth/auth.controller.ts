@@ -1,6 +1,7 @@
 import { Body, Controller, Post, UnauthorizedException } from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import { AuthService } from './auth.service';
+import { SejongAuthDto } from './sejongAuth.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -16,5 +17,9 @@ export class AuthController {
         } catch (e) {
             throw new UnauthorizedException('토큰이 유효하지 않음');
         }
+    }
+    @Post('sejong')
+    public async sejongAuth(@Body() body: SejongAuthDto) {
+        return await this.authService.checkSejongStudent(body);
     }
 }

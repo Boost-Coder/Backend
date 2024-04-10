@@ -2,6 +2,7 @@ import {
     Body,
     Controller,
     Delete,
+    Get,
     Param,
     Put,
     UseGuards,
@@ -15,6 +16,11 @@ import { OwnershipGuard } from '../auth/guard/ownership.guard';
 @Controller('api/users')
 export class UserController {
     constructor(private userService: UserService) {}
+
+    @Get(':id')
+    async userFind(@Param('id') userId: string) {
+        return await this.userService.findUserByUserId(userId);
+    }
 
     @UseGuards(OwnershipGuard)
     @Put(':id')

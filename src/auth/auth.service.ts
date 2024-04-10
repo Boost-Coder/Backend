@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Post } from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../Entity/user';
 import { ConfigService } from '@nestjs/config';
+import { SejongAuthDto } from './sejongAuth.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     ) {}
 
     async logInOrSignUp(providerId: string) {
-        let user = await this.userService.getUserByProviderId(providerId);
+        let user = await this.userService.findUserByProviderId(providerId);
         if (!user) {
             user = await this.userService.createUser(providerId);
         }
@@ -92,5 +93,22 @@ export class AuthService {
 
         const key = await client.getSigningKey(kid);
         return key.getPublicKey();
+    }
+
+    public async checkSejongStudent(sejongAuth: SejongAuthDto) {
+        const fetchURL = 'https://auth.imsejong.com/auth';
+
+        const isSejong = await fetch(fetchURL, {
+            headers: {
+                host: 'auth.imsejong.com',
+                'Content-type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify(sejongAuth),
+        });
+
+        const isSejongJson = await isSejong.json();
+
+        return { isSejong: isSejongJson.result.is_auth };
     }
 }
