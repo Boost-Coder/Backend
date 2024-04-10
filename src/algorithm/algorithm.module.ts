@@ -6,5 +6,6 @@ import { AlgorithmRepository } from './algorithm.repository';
 @Module({
     controllers: [AlgorithmController],
     providers: [AlgorithmService, AlgorithmRepository],
+    exports: [AlgorithmService],
 })
 export class AlgorithmModule {}
