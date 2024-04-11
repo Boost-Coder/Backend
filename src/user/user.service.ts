@@ -76,6 +76,14 @@ export class UserService {
         user.birthDate = userInfoToUpdate.birthDate;
     }
 
+    async removeUser(userId: string) {
+        const user = await this.userRepository.findOneWithStats(userId);
+        if (!user) {
+            throw new NotFoundException('User Not Found');
+        }
+        await this.userRepository.delete(user);
+    }
+
     generateUserId() {
         const uuid: string = uuidv4();
         return uuid.slice(0, 8);

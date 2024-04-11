@@ -8,11 +8,15 @@ export class AuthController {
     constructor(private authService: AuthService) {}
     @Post('apple')
     async signInWithApple(@Body() body: AppleLoginDto) {
-        const providerId = await this.authService.validateAppleOAuth(body);
-        if (!providerId) {
+        try {
+            const providerId = await this.authService.validateAppleOAuth(body);
+            if (!providerId) {
+                throw new UnauthorizedException('토큰이 유효하지 않음');
+            }
+            return await this.authService.logInOrSignUp(providerId);
+        } catch (e) {
             throw new UnauthorizedException('토큰이 유효하지 않음');
         }
-        return await this.authService.logInOrSignUp(providerId);
     }
     @Post('sejong')
     public async sejongAuth(@Body() body: SejongAuthDto) {
