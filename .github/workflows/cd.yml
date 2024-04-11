@@ -20,6 +20,10 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> envs/prod.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> envs/prod.env
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> envs/prod.env
+          echo "DB_DATABASE=${{ secrets.JWT_SECRET }}" >> envs/prod.env
+          echo "DB_DATABASE=${{ secrets.JWT_EXPIRES_IN }}" >> envs/prod.env
+          echo "DB_DATABASE=${{ secrets.JWT_REFRESH_SECRET }}" >> envs/prod.env
+          echo "DB_DATABASE=${{ secrets.JWT_REFRESH_EXPIRES_IN }}" >> envs/prod.env
       
       - name: Build docker image
         run: docker build . -t rankin:latest
