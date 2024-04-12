@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from './github.repository';
 import { Github } from '../Entity/github';
@@ -11,6 +16,10 @@ export class GithubService {
         private configService: ConfigService,
         private githubRepository: GithubRepository,
     ) {}
+
+    async findGithub(userId: string) {
+        return await this.githubRepository.findOne(userId);
+    }
 
     public async createGithub(tokens: CreateGithubDto, userId: string) {
         const userResource = await this.getUserResource(tokens.accessToken);
