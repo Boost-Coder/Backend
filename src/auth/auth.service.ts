@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../Entity/user';
 import { ConfigService } from '@nestjs/config';
 import { SejongAuthDto } from './sejongAuth.dto';
+import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
 
 @Injectable()
 export class AuthService {
@@ -95,8 +96,9 @@ export class AuthService {
         return key.getPublicKey();
     }
 
-    public async checkSejongStudent(sejongAuth: SejongAuthDto) {
-        const fetchURL = 'https://auth.imsejong.com/auth';
+    public async checkSejongStudent(sejongAuth: SejongAuthDto, userId: string) {
+        const fetchURL =
+            'https://auth.imsejong.com/auth?method=DosejongSession';
 
         const isSejong = await fetch(fetchURL, {
             headers: {
@@ -108,7 +110,15 @@ export class AuthService {
         });
 
         const isSejongJson = await isSejong.json();
+        if (!isSejongJson.result.is_auth) return { isSejong: false };
+        else {
+            const updateUserDto = new UpdateUserInfoDto();
+            updateUserDto.name = isSejongJson.result.body.name;
+            updateUserDto.major = isSejongJson.result.body.major;
+            updateUserDto.studentId = sejongAuth.id;
 
-        return { isSejong: isSejongJson.result.is_auth };
+            await this.userService.updateUserInfo(userId, updateUserDto);
+            return { isSejong: isSejongJson.result.is_auth };
+        }
     }
 }
