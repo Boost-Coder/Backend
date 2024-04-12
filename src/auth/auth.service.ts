@@ -29,6 +29,16 @@ export class AuthService {
         return { accessToken, refreshToken, isMember };
     }
 
+    isMember(user: User) {
+        return !(
+            !user ||
+            !user.name ||
+            !user.studentId ||
+            !user.major ||
+            !user.nickname
+        );
+    }
+
     generateAccessToken(user: User): string {
         return this.jwtService.sign({
             userId: user.userId,
