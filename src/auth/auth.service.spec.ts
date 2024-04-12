@@ -66,21 +66,45 @@ describe('AuthService', () => {
         const user = new User();
         user.userId = 'user';
         user.providerId = providerId;
+        user.nickname = 'qwe';
+        user.major = 'qwe';
+        user.name = 'qwe';
+        user.studentId = 123;
         it('should login', async function () {
             mockUserService.findUserByProviderId.mockResolvedValue(user);
 
-            await service.logInOrSignUp(providerId);
+            const result = await service.logInOrSignUp(providerId);
 
             expect(mockUserService.createUser).not.toHaveBeenCalled();
+            expect(result.isMember).toEqual(true);
         });
 
-        it('should signup', async function () {
+        it('should signup if user does not exist', async function () {
             mockUserService.findUserByProviderId.mockResolvedValue(null);
             mockUserService.createUser.mockResolvedValue(user);
 
-            await service.logInOrSignUp(providerId);
+            const result = await service.logInOrSignUp(providerId);
 
             expect(mockUserService.createUser).toHaveBeenCalled();
+            expect(result.isMember).toEqual(false);
+        });
+
+        it('should signup if user`s data is not perfect', async function () {
+            mockUserService.createUser = jest.fn();
+            const user = new User();
+            user.userId = 'user';
+            user.providerId = providerId;
+            user.major = 'qwe';
+            user.name = 'qwe';
+            user.studentId = 123;
+            mockUserService.findUserByProviderId.mockResolvedValue(user);
+
+            mockUserService.createUser.mockResolvedValue(user);
+
+            const result = await service.logInOrSignUp(providerId);
+
+            expect(mockUserService.createUser).not.toHaveBeenCalled();
+            expect(result.isMember).toEqual(false);
         });
     });
 });
