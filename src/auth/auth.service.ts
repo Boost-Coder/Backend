@@ -1,4 +1,4 @@
-import { Injectable, Post } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
@@ -19,10 +19,9 @@ export class AuthService {
 
     async logInOrSignUp(providerId: string) {
         let user = await this.userService.findUserByProviderId(providerId);
-        let isMember = true;
+        const isMember = this.isMember(user);
         if (!user) {
             user = await this.userService.createUser(providerId);
-            isMember = false;
         }
         const accessToken = this.generateAccessToken(user);
         const refreshToken = this.generateRefreshToken(user);
