@@ -19,12 +19,14 @@ export class AuthService {
 
     async logInOrSignUp(providerId: string) {
         let user = await this.userService.findUserByProviderId(providerId);
+        let isMember = true;
         if (!user) {
             user = await this.userService.createUser(providerId);
+            isMember = false;
         }
         const accessToken = this.generateAccessToken(user);
         const refreshToken = this.generateRefreshToken(user);
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, isMember };
     }
 
     generateAccessToken(user: User): string {
