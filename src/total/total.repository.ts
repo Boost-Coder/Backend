@@ -6,11 +6,11 @@ import { REQUEST } from '@nestjs/core';
 import { TotalPoint } from '../Entity/totalPoint';
 
 export class TotalRepository extends BaseRepository {
-    private repository: Repository<Grade>;
+    private repository: Repository<TotalPoint>;
 
     constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
         super(dataSource, req);
-        this.repository = this.getRepository(Grade);
+        this.repository = this.getRepository(TotalPoint);
     }
 
     async findOneById(userId: string) {
