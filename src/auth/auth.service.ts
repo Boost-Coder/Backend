@@ -129,7 +129,7 @@ export class AuthService {
             updateUserDto.studentId = sejongAuth.id;
 
             await this.userService.updateUserInfo(userId, updateUserDto);
-            return { isSejong: isSejongJson.result.is_auth };
+            return { isAuthorized: isSejongJson.result.is_auth };
         }
     }
 }
