@@ -12,6 +12,7 @@ import { GradeController } from './grade/grade.controller';
 import { GradeService } from './grade/grade.service';
 import { GradeModule } from './grade/grade.module';
 import { RankModule } from './rank/rank.module';
+import { TotalModule } from './total/total.module';
 import * as process from 'process';
 
 @Module({
@@ -29,6 +30,7 @@ import * as process from 'process';
         GithubModule,
         GradeModule,
         RankModule,
+        TotalModule,
     ],
     controllers: [AppController],
     providers: [AppService],
