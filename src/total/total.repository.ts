@@ -13,6 +13,10 @@ export class TotalRepository extends BaseRepository {
         this.repository = this.getRepository(Grade);
     }
 
+    findOne(userId: string) {
+        return this.repository.findOneBy({ userId: userId });
+    }
+
     async update(total: TotalPoint, userId: string) {
         return await this.repository.update({ userId: userId }, total);
     }
