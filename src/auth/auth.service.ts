@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
@@ -8,6 +8,7 @@ import { User } from '../Entity/user';
 import { ConfigService } from '@nestjs/config';
 import { SejongAuthDto } from './sejongAuth.dto';
 import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -65,15 +66,22 @@ export class AuthService {
         const kid = this.getkid(appleLoginDto.identityToken); // 토큰을 디코딩해서 kid를 가져옴
         const applePublicKey = await this.getApplePublicKey(kid);
 
-        const isVerified: any = jwt.verify(
-            appleLoginDto.identityToken,
-            applePublicKey,
-        );
+        try {
+            const isVerified: any = jwt.verify(
+                appleLoginDto.identityToken,
+                applePublicKey,
+            );
 
-        if (isVerified) {
-            return payloadClaimsJson.sub;
-        } else {
-            return null;
+            if (isVerified) {
+                return payloadClaimsJson.sub;
+            } else {
+                return null;
+            }
+        } catch (e) {
+            if (e instanceof TokenExpiredError) {
+                throw new UnauthorizedException();
+            }
+            throw e;
         }
     }
 
