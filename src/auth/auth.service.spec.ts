@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../Entity/user';
+import { TotalService } from '../total/total.service';
 
 const mockUserService = {
     findUserByProviderId: jest.fn(),
@@ -16,6 +17,10 @@ const mockJwtService = {
 
 const mockConfigService = {
     get: jest.fn(),
+};
+
+const mockTotalService = {
+    createTotalPoint: jest.fn(),
 };
 
 describe('AuthService', () => {
@@ -36,6 +41,10 @@ describe('AuthService', () => {
                 {
                     provide: ConfigService,
                     useValue: mockConfigService,
+                },
+                {
+                    provide: TotalService,
+                    useValue: mockTotalService,
                 },
             ],
         }).compile();
@@ -76,6 +85,7 @@ describe('AuthService', () => {
             const result = await service.logInOrSignUp(providerId);
 
             expect(mockUserService.createUser).not.toHaveBeenCalled();
+            expect(mockTotalService.createTotalPoint).not.toHaveBeenCalled();
             expect(result.isMember).toEqual(true);
         });
 
@@ -86,6 +96,7 @@ describe('AuthService', () => {
             const result = await service.logInOrSignUp(providerId);
 
             expect(mockUserService.createUser).toHaveBeenCalled();
+            expect(mockTotalService.createTotalPoint).toHaveBeenCalled();
             expect(result.isMember).toEqual(false);
         });
 
@@ -102,8 +113,10 @@ describe('AuthService', () => {
             mockUserService.createUser.mockResolvedValue(user);
 
             const result = await service.logInOrSignUp(providerId);
-
+            mockUserService.createUser.mockClear();
+            mockTotalService.createTotalPoint.mockClear();
             expect(mockUserService.createUser).not.toHaveBeenCalled();
+            expect(mockTotalService.createTotalPoint).not.toHaveBeenCalled();
             expect(result.isMember).toEqual(false);
         });
     });
