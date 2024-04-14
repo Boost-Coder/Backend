@@ -13,12 +13,10 @@ export class LoginService {
     public sendTokens(refreshToken: string) {
         const payload = this.validateRefreshToken(refreshToken);
 
-        if (payload) {
-            return {
-                accessToken: this.generateAccessToken(payload.userId),
-                refreshToken: this.generateRefreshToken(payload.userId),
-            };
-        }
+        return {
+            accessToken: this.generateAccessToken(payload.userId),
+            refreshToken: this.generateRefreshToken(payload.userId),
+        };
     }
 
     public generateAccessToken(userId: string): string {
