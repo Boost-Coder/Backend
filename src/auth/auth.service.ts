@@ -140,4 +140,25 @@ export class AuthService {
             return { isAuthorized: isSejongJson.result.is_auth };
         }
     }
+
+    public sendTokens(refreshToken: string) {
+        const payload = this.validateRefreshToken(refreshToken);
+
+        return {
+            accessToken: this.generateAccessToken(payload.userId),
+            refreshToken: this.generateRefreshToken(payload.userId),
+        };
+    }
+
+    public validateRefreshToken(refreshToken: string) {
+        try {
+            return this.jwtService.verify(refreshToken, {
+                secret: this.configService.get('JWT_REFRESH_SECRET'),
+            });
+        } catch (e) {
+            if (e instanceof TokenExpiredError) {
+                throw new UnauthorizedException();
+            }
+        }
+    }
 }
