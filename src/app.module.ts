@@ -13,7 +13,6 @@ import { GradeService } from './grade/grade.service';
 import { GradeModule } from './grade/grade.module';
 import { RankModule } from './rank/rank.module';
 import { LoginModule } from './login/login.module';
-import { LoginModule } from './login/login.module';
 import * as process from 'process';
 
 @Module({
