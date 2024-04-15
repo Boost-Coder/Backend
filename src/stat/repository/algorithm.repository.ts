@@ -1,8 +1,8 @@
-import { BaseRepository } from '../utils/base.repository';
+import { BaseRepository } from '../../utils/base.repository';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
-import { Algorithm } from '../Entity/algorithm';
+import { Algorithm } from '../../Entity/algorithm';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AlgorithmRepository extends BaseRepository {

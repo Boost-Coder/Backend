@@ -3,8 +3,8 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { GradeRepository } from './grade.repository';
-import { Grade } from '../Entity/grade';
+import { GradeRepository } from '../repository/grade.repository';
+import { Grade } from '../../Entity/grade';
 
 @Injectable()
 export class GradeService {

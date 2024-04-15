@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { SejongAuthDto } from './sejongAuth.dto';
 import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { TotalService } from '../stat/service/total.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,7 @@ export class AuthService {
         private userService: UserService,
         private jwtService: JwtService,
         private configService: ConfigService,
+        private totalService: TotalService,
     ) {}
 
     async logInOrSignUp(providerId: string) {
@@ -23,6 +25,7 @@ export class AuthService {
         const isMember = this.isMember(user);
         if (!user) {
             user = await this.userService.createUser(providerId);
+            await this.totalService.createTotalPoint(user.userId);
         }
         const accessToken = this.generateAccessToken(user);
         const refreshToken = this.generateRefreshToken(user);

@@ -1,6 +1,6 @@
-import { BaseRepository } from '../utils/base.repository';
+import { BaseRepository } from '../../utils/base.repository';
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { Github } from '../Entity/github';
+import { Github } from '../../Entity/github';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
 

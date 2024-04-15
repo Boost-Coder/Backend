@@ -5,9 +5,9 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GithubRepository } from './github.repository';
-import { Github } from '../Entity/github';
-import { CreateGithubDto } from './createGitub.dto';
+import { GithubRepository } from '../repository/github.repository';
+import { Github } from '../../Entity/github';
+import { CreateGithubDto } from '../dto/createGitub.dto';
 
 @Injectable()
 export class GithubService {
