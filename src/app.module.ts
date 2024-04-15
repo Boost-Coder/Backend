@@ -20,7 +20,6 @@ import * as process from 'process';
         }),
         AuthModule,
         UserModule,
-        // RankModule,
         StatModule,
     ],
     controllers: [AppController],

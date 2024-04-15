@@ -5,6 +5,9 @@ import { User } from '../../Entity/user';
 import { GithubService } from './github.service';
 import { GradeService } from './grade.service';
 import { AlgorithmService } from './algorithm.service';
+import { Github } from '../../Entity/github';
+import { Algorithm } from '../../Entity/algorithm';
+import { Grade } from '../../Entity/grade';
 
 const mockTotalRepository = {
     save: jest.fn(),
@@ -71,6 +74,45 @@ describe('TotalService', () => {
             expect(service.createTotalPoint(userId)).rejects.toThrow(
                 '이미 등록했습니다.',
             );
+        });
+    });
+
+    describe('findStat', function () {
+        it('should return stat', async function () {
+            const userId = 'qwe';
+            const github = new Github();
+            const algorithm = new Algorithm();
+            const grade = new Grade();
+            github.point = 123;
+            algorithm.point = 123;
+            grade.grade = 123;
+
+            mockGitService.findGithub.mockResolvedValue(github);
+            mockAlgorithmService.findAlgorithm.mockResolvedValue(algorithm);
+            mockGradeService.findGrade.mockResolvedValue(grade);
+
+            const result = await service.findStat(userId);
+            expect(result.grade).toEqual(grade.grade);
+            expect(result.githubPoint).toEqual(github.point);
+            expect(result.algorithmPoint).toEqual(algorithm.point);
+        });
+
+        it('should return null if stat does not exist', async function () {
+            const userId = 'qwe';
+            const github = new Github();
+            const algorithm = null;
+            const grade = new Grade();
+            github.point = 123;
+            grade.grade = 123;
+
+            mockGitService.findGithub.mockResolvedValue(github);
+            mockAlgorithmService.findAlgorithm.mockResolvedValue(algorithm);
+            mockGradeService.findGrade.mockResolvedValue(grade);
+
+            const result = await service.findStat(userId);
+            expect(result.grade).toEqual(grade.grade);
+            expect(result.githubPoint).toEqual(github.point);
+            expect(result.algorithmPoint).toEqual(null);
         });
     });
 });

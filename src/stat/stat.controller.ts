@@ -2,6 +2,7 @@ import {
     Body,
     Controller,
     Delete,
+    Get,
     Param,
     Patch,
     Post,
@@ -15,6 +16,8 @@ import { CreateAlgorithmDto } from './dto/createAlgorithm.dto';
 import { UserId } from '../decorator/user-id.decorator';
 import { OwnershipGuard } from '../auth/guard/ownership.guard';
 import { CreateGithubDto } from './dto/createGitub.dto';
+import { StatFindDto } from './dto/stat-find.dto';
+import { TotalService } from './service/total.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -23,7 +26,13 @@ export class StatController {
         private readonly algorithmService: AlgorithmService,
         private readonly githubService: GithubService,
         private readonly gradeService: GradeService,
+        private readonly totalService: TotalService,
     ) {}
+
+    @Get(':id')
+    async statFind(@Param('id') userId: string): Promise<StatFindDto> {
+        return await this.totalService.findStat(userId);
+    }
 
     @Post('algorithm')
     async algorithmCreate(@Body() body: CreateAlgorithmDto, @UserId() userId) {

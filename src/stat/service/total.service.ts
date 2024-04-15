@@ -16,6 +16,18 @@ export class TotalService {
         private algorithmService: AlgorithmService,
         private gradeService: GradeService,
     ) {}
+
+    async findStat(userId: string) {
+        const github = await this.githubService.findGithub(userId);
+        const algorithm = await this.algorithmService.findAlgorithm(userId);
+        const grade = await this.gradeService.findGrade(userId);
+
+        return {
+            githubPoint: github ? github.point : null,
+            algorithmPoint: algorithm ? algorithm.point : null,
+            grade: grade ? grade.grade : null,
+        };
+    }
     async createTotalPoint(userId: string) {
         const isExist = await this.totalRepository.findOneById(userId);
 
