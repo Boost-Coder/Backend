@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { GithubService } from '../github/github.service';
-import { AlgorithmService } from '../algorithm/algorithm.service';
-import { GradeService } from '../grade/grade.service';
+import { GithubService } from '../stat/service/github.service';
+import { AlgorithmService } from '../stat/service/algorithm.service';
+import { GradeService } from '../stat/service/grade.service';
 
 @Injectable()
 export class RankService {

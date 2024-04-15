@@ -5,8 +5,8 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import axios from 'axios';
-import { AlgorithmRepository } from './algorithm.repository';
-import { Algorithm } from '../Entity/algorithm';
+import { AlgorithmRepository } from '../repository/algorithm.repository';
+import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';

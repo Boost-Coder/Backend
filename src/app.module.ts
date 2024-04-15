@@ -9,10 +9,11 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { GithubModule } from './github/github.module';
 import { GradeController } from './grade/grade.controller';
-import { GradeService } from './grade/grade.service';
+import { GradeService } from './stat/service/grade.service';
 import { GradeModule } from './grade/grade.module';
 import { RankModule } from './rank/rank.module';
 import { TotalModule } from './total/total.module';
+import { StatModule } from './stat/stat.module';
 import * as process from 'process';
 
 @Module({
@@ -24,13 +25,11 @@ import * as process from 'process';
             isGlobal: true,
             envFilePath: `${process.cwd()}/envs/${process.env.NODE_ENV}.env`,
         }),
-        AlgorithmModule,
         AuthModule,
         UserModule,
-        GithubModule,
-        GradeModule,
         RankModule,
         TotalModule,
+        StatModule,
     ],
     controllers: [AppController],
     providers: [AppService],

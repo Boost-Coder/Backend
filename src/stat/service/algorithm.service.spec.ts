@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlgorithmService } from './algorithm.service';
 import axios from 'axios';
-import { AlgorithmRepository } from './algorithm.repository';
-import { Algorithm } from '../Entity/algorithm';
+import { AlgorithmRepository } from '../repository/algorithm.repository';
+import { Algorithm } from '../../Entity/algorithm';
 
 const mockAlgorithmRepository = {
     save: jest.fn(),

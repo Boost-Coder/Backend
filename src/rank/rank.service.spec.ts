@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RankService } from './rank.service';
-import { GithubService } from '../github/github.service';
-import { AlgorithmService } from '../algorithm/algorithm.service';
-import { GradeService } from '../grade/grade.service';
+import { GithubService } from '../stat/service/github.service';
+import { AlgorithmService } from '../stat/service/algorithm.service';
+import { GradeService } from '../stat/service/grade.service';
 import { Github } from '../Entity/github';
 import { Algorithm } from '../Entity/algorithm';
 import { Grade } from '../Entity/grade';

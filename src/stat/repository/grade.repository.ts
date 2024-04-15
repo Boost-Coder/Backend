@@ -1,9 +1,9 @@
-import { BaseRepository } from '../utils/base.repository';
+import { BaseRepository } from '../../utils/base.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Github } from '../Entity/github';
+import { Github } from '../../Entity/github';
 import { REQUEST } from '@nestjs/core';
-import { Grade } from '../Entity/grade';
+import { Grade } from '../../Entity/grade';
 
 @Injectable()
 export class GradeRepository extends BaseRepository {
