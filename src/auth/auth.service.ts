@@ -40,9 +40,15 @@ export class AuthService {
     }
 
     generateAccessToken(user: User): string {
-        return this.jwtService.sign({
-            userId: user.userId,
-        });
+        return this.jwtService.sign(
+            {
+                userId: user.userId,
+            },
+            {
+                secret: this.configService.get('JWT_ACCESS_SECRET'),
+                expiresIn: this.configService.get('JWT_ACCESS_EXPIRES_IN'),
+            },
+        );
     }
 
     generateRefreshToken(user: User): string {
