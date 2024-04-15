@@ -37,6 +37,7 @@ export class StatController {
     @Post('algorithm')
     async algorithmCreate(@Body() body: CreateAlgorithmDto, @UserId() userId) {
         await this.algorithmService.createAlgorithm(userId, body.bojId);
+        await this.totalService.updateTotal(userId);
     }
 
     @UseGuards(OwnershipGuard)
@@ -46,17 +47,20 @@ export class StatController {
         @Body() body: CreateAlgorithmDto,
     ) {
         await this.algorithmService.modifyAlgorithm(userId, body.bojId);
+        await this.totalService.updateTotal(userId);
     }
 
     @UseGuards(OwnershipGuard)
     @Delete('algorithm/:id')
     async algorithmRemove(@Param('id') userId) {
         await this.algorithmService.removeAlgorithm(userId);
+        await this.totalService.updateTotal(userId);
     }
 
     @Post('github')
     public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
+        await this.totalService.updateTotal(userId);
     }
 
     @UseGuards(OwnershipGuard)
@@ -66,12 +70,14 @@ export class StatController {
         @Body() body: CreateGithubDto,
     ) {
         await this.githubService.modifyGithub(body, userId);
+        await this.totalService.updateTotal(userId);
     }
 
     @UseGuards(OwnershipGuard)
     @Delete('github/:id')
     public async gitHubDelete(@Param('id') userId: string) {
         await this.githubService.deleteGithub(userId);
+        await this.totalService.updateTotal(userId);
     }
 
     @Post('grade')
@@ -80,6 +86,7 @@ export class StatController {
         @UserId() userId: string,
     ) {
         await this.gradeService.gradeCreate(userId, grade);
+        await this.totalService.updateTotal(userId);
     }
 
     @Patch('grade/:id')
@@ -89,11 +96,13 @@ export class StatController {
         @Param('id') userId: string,
     ) {
         await this.gradeService.gradeModify(userId, grade);
+        await this.totalService.updateTotal(userId);
     }
 
     @Delete('grade/:id')
     @UseGuards(OwnershipGuard)
     public async deleteGrade(@Param('id') userId: string) {
         await this.gradeService.gradeDelete(userId);
+        await this.totalService.updateTotal(userId);
     }
 }
