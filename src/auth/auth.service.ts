@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { SejongAuthDto } from './sejongAuth.dto';
 import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
 import { TokenExpiredError } from 'jsonwebtoken';
-import { TotalService } from '../total/total.service';
+import { TotalService } from '../stat/service/total.service';
 
 @Injectable()
 export class AuthService {

@@ -4,15 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './Config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
-import { AlgorithmModule } from './algorithm/algorithm.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { GithubModule } from './github/github.module';
-import { GradeController } from './grade/grade.controller';
-import { GradeService } from './stat/service/grade.service';
-import { GradeModule } from './grade/grade.module';
-import { RankModule } from './rank/rank.module';
-import { TotalModule } from './total/total.module';
 import { StatModule } from './stat/stat.module';
 import * as process from 'process';
 
@@ -27,8 +20,7 @@ import * as process from 'process';
         }),
         AuthModule,
         UserModule,
-        RankModule,
-        TotalModule,
+        // RankModule,
         StatModule,
     ],
     controllers: [AppController],

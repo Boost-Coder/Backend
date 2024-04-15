@@ -4,7 +4,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../Entity/user';
-import { TotalService } from '../total/total.service';
+import { TotalService } from '../stat/service/total.service';
 
 const mockUserService = {
     findUserByProviderId: jest.fn(),

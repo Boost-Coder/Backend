@@ -1,9 +1,9 @@
-import { BaseRepository } from '../utils/base.repository';
+import { BaseRepository } from '../../utils/base.repository';
 import { DataSource, Repository } from 'typeorm';
-import { Grade } from '../Entity/grade';
+import { Grade } from '../../Entity/grade';
 import { Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { TotalPoint } from '../Entity/totalPoint';
+import { TotalPoint } from '../../Entity/totalPoint';
 
 export class TotalRepository extends BaseRepository {
     private repository: Repository<TotalPoint>;

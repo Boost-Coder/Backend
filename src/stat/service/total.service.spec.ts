@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TotalService } from './total.service';
-import { TotalRepository } from './total.repository';
-import { User } from '../Entity/user';
-import { GithubService } from '../stat/service/github.service';
-import { GradeService } from '../stat/service/grade.service';
-import { AlgorithmService } from '../stat/service/algorithm.service';
+import { TotalRepository } from '../repository/total.repository';
+import { User } from '../../Entity/user';
+import { GithubService } from './github.service';
+import { GradeService } from './grade.service';
+import { AlgorithmService } from './algorithm.service';
 
 const mockTotalRepository = {
     save: jest.fn(),

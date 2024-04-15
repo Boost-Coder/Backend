@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { TotalRepository } from './total.repository';
-import { TotalPoint } from '../Entity/totalPoint';
-import { GithubService } from '../stat/service/github.service';
-import { AlgorithmService } from '../stat/service/algorithm.service';
-import { GradeService } from '../stat/service/grade.service';
-import { Github } from '../Entity/github';
-import { Grade } from '../Entity/grade';
-import { Algorithm } from '../Entity/algorithm';
+import { TotalRepository } from '../repository/total.repository';
+import { TotalPoint } from '../../Entity/totalPoint';
+import { GithubService } from './github.service';
+import { AlgorithmService } from './algorithm.service';
+import { GradeService } from './grade.service';
+import { Github } from '../../Entity/github';
+import { Grade } from '../../Entity/grade';
+import { Algorithm } from '../../Entity/algorithm';
 
 @Injectable()
 export class TotalService {
