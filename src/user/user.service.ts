@@ -88,4 +88,8 @@ export class UserService {
         const uuid: string = uuidv4();
         return uuid.slice(0, 8);
     }
+
+    async checkNicknameDuplicate(nickname: string) {
+        return await this.userRepository.findOneByNickname(nickname);
+    }
 }

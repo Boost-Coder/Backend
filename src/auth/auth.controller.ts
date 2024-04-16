@@ -34,4 +34,10 @@ export class AuthController {
     ) {
         return await this.authService.checkSejongStudent(body, userId);
     }
+
+    @Post('checkNickname')
+    @UseGuards(JwtAuthGuard)
+    public async checkNickname(@Body('nickname') nickname: string) {
+        return await this.authService.checkNicknameDuplicate(nickname);
+    }
 }
