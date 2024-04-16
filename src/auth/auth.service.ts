@@ -31,8 +31,8 @@ export class AuthService {
             user = await this.userService.createUser(providerId);
             await this.totalService.createTotalPoint(user.userId);
         }
-        const accessToken = this.generateAccessToken(user);
-        const refreshToken = this.generateRefreshToken(user);
+        const accessToken = this.generateAccessToken(user.userId);
+        const refreshToken = this.generateRefreshToken(user.userId);
         return { accessToken, refreshToken, isMember };
     }
 
@@ -46,16 +46,16 @@ export class AuthService {
         );
     }
 
-    generateAccessToken(user: User): string {
+    generateAccessToken(userId: string): string {
         return this.jwtService.sign({
-            userId: user.userId,
+            userId: userId,
         });
     }
 
-    generateRefreshToken(user: User): string {
+    generateRefreshToken(userId: string): string {
         return this.jwtService.sign(
             {
-                userId: user.userId,
+                userId: userId,
             },
             {
                 secret: this.configService.get('JWT_REFRESH_SECRET'),
@@ -148,6 +148,7 @@ export class AuthService {
         }
     }
 
+
     public async checkNicknameDuplicate(nickname: string) {
         const isExist = await this.userService.checkNicknameDuplicate(nickname);
 
@@ -155,6 +156,27 @@ export class AuthService {
             throw new ConflictException('중복되는 닉네임입니다');
         } else {
             return { isDuplicate: false };
+        }
+    }
+
+    public sendTokens(refreshToken: string) {
+        const payload = this.validateRefreshToken(refreshToken);
+
+        return {
+            accessToken: this.generateAccessToken(payload.userId),
+            refreshToken: this.generateRefreshToken(payload.userId),
+        };
+    }
+
+    public validateRefreshToken(refreshToken: string) {
+        try {
+            return this.jwtService.verify(refreshToken, {
+                secret: this.configService.get('JWT_REFRESH_SECRET'),
+            });
+        } catch (e) {
+            if (e instanceof TokenExpiredError) {
+                throw new UnauthorizedException();
+            }
         }
     }
 }
