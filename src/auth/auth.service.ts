@@ -24,8 +24,8 @@ export class AuthService {
         if (!user) {
             user = await this.userService.createUser(providerId);
         }
-        const accessToken = this.generateAccessToken(user);
-        const refreshToken = this.generateRefreshToken(user);
+        const accessToken = this.generateAccessToken(user.userId);
+        const refreshToken = this.generateRefreshToken(user.userId);
         return { accessToken, refreshToken, isMember };
     }
 
@@ -39,22 +39,16 @@ export class AuthService {
         );
     }
 
-    generateAccessToken(user: User): string {
-        return this.jwtService.sign(
-            {
-                userId: user.userId,
-            },
-            {
-                secret: this.configService.get('JWT_ACCESS_SECRET'),
-                expiresIn: this.configService.get('JWT_ACCESS_EXPIRES_IN'),
-            },
-        );
+    generateAccessToken(userId: string): string {
+        return this.jwtService.sign({
+            userId: userId,
+        });
     }
 
-    generateRefreshToken(user: User): string {
+    generateRefreshToken(userId: string): string {
         return this.jwtService.sign(
             {
-                userId: user.userId,
+                userId: userId,
             },
             {
                 secret: this.configService.get('JWT_REFRESH_SECRET'),
