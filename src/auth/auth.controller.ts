@@ -34,4 +34,9 @@ export class AuthController {
     ) {
         return await this.authService.checkSejongStudent(body, userId);
     }
+
+    @Post('refresh')
+    public refreshTokens(@Body('refreshToken') refreshToken: string) {
+        return this.authService.sendTokens(refreshToken);
+    }
 }

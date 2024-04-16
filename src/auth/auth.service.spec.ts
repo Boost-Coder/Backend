@@ -62,7 +62,7 @@ describe('AuthService', () => {
         it('should generate access token', function () {
             mockJwtService.sign.mockResolvedValue('jwt-token');
 
-            service.generateAccessToken(user);
+            service.generateAccessToken(user.userId);
 
             expect(mockJwtService.sign).toHaveBeenCalledWith({
                 userId: user.userId,
