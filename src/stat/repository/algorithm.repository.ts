@@ -25,27 +25,39 @@ export class AlgorithmRepository extends BaseRepository {
     async findAlgorithmWithRank(options: RankListOptionDto) {
         const queryBuilder = this.repository
             .createQueryBuilder()
-            .select(['b.rank', 'b.user_id', 'b.point'])
+            .select(['b.rank', 'b.user_id', 'b.point', 'b.nickname'])
             .distinct(true)
             .from((sub) => {
                 return sub
                     .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
                     .addSelect('a.user_id', 'user_id')
                     .addSelect('a.point', 'point')
-                    .from(Algorithm, 'a');
+                    .addSelect('u.nickname', 'nickname')
+                    .from(Algorithm, 'a')
+                    .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .where(this.createClassificationOption(options));
             }, 'b')
-            .innerJoin(User, 'u', 'b.user_id = u.user_id')
-            .addSelect('u.nickname', 'nickname')
-            .where('b.point < :point', { point: options.cursorPoint })
-            .orWhere('b.point = :point AND b.user_id > :userId', {
-                point: options.cursorPoint,
-                userId: options.cursorUserId,
-            })
+            .where(this.createCursorOption(options))
             .orderBy('point', 'DESC')
             .addOrderBy('user_id')
             .limit(3);
-
         return await queryBuilder.getRawMany();
+    }
+
+    createCursorOption(options: RankListOptionDto) {
+        if (!options.cursorPoint && !options.cursorUserId) {
+            return 'b.point > -1';
+        } else {
+            return `b.point < ${options.cursorPoint} or b.point = ${options.cursorPoint} AND b.user_id > '${options.cursorUserId}'`;
+        }
+    }
+
+    createClassificationOption(options: RankListOptionDto) {
+        if (options.major != null) {
+            return `u.major = ${options.major}`;
+        } else {
+            return `u.id > 0`;
+        }
     }
 
     async update(userId: string, algorithm: Algorithm) {
