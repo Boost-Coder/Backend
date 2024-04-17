@@ -84,6 +84,27 @@ export class UserController {
     }
 
     @ApiTags('users')
+    @ApiOperation({
+        summary: '유저 삭제 API',
+        description: '회원정보를 삭제한다. 회원탈퇴 하는 API',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저 삭제 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @UseGuards(OwnershipGuard)
     @Delete(':id')
     async userRemove(@Param('id') userId: string) {
