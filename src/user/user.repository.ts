@@ -20,6 +20,10 @@ export class UserRepository extends BaseRepository {
         return await this.repository.findOneBy({ userId: userId });
     }
 
+    async findOneByNickname(nickname: string) {
+        return await this.repository.findOneBy({ nickname: nickname });
+    }
+
     async findOneWithStats(userId: string) {
         return await this.repository.findOne({
             where: { userId: userId },

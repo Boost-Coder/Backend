@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    ConflictException,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { AppleLoginDto } from './appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
@@ -141,6 +145,17 @@ export class AuthService {
 
             await this.userService.updateUserInfo(userId, updateUserDto);
             return { isAuthorized: isSejongJson.result.is_auth };
+        }
+    }
+
+
+    public async checkNicknameDuplicate(nickname: string) {
+        const isExist = await this.userService.checkNicknameDuplicate(nickname);
+
+        if (isExist) {
+            throw new ConflictException('중복되는 닉네임입니다');
+        } else {
+            return { isDuplicate: false };
         }
     }
 
