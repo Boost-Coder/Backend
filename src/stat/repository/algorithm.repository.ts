@@ -54,7 +54,7 @@ export class AlgorithmRepository extends BaseRepository {
 
     createClassificationOption(options: RankListOptionDto) {
         if (options.major != null) {
-            return `u.major = ${options.major}`;
+            return `u.major like '${options.major}'`;
         } else {
             return `u.id > 0`;
         }
