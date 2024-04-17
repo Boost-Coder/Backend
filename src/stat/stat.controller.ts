@@ -6,7 +6,6 @@ import {
     Param,
     Patch,
     Post,
-    Query,
     UseGuards,
 } from '@nestjs/common';
 import { AlgorithmService } from './service/algorithm.service';
@@ -19,6 +18,7 @@ import { OwnershipGuard } from '../auth/guard/ownership.guard';
 import { CreateGithubDto } from './dto/createGitub.dto';
 import { StatFindDto } from './dto/stat-find.dto';
 import { TotalService } from './service/total.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -30,17 +30,20 @@ export class StatController {
         private readonly totalService: TotalService,
     ) {}
 
+    @ApiTags('stat')
     @Get(':id')
     async statFind(@Param('id') userId: string): Promise<StatFindDto> {
         return await this.totalService.findStat(userId);
     }
 
+    @ApiTags('stat')
     @Post('algorithm')
     async algorithmCreate(@Body() body: CreateAlgorithmDto, @UserId() userId) {
         await this.algorithmService.createAlgorithm(userId, body.bojId);
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @UseGuards(OwnershipGuard)
     @Patch('algorithm/:id')
     async algorithmModify(
@@ -51,6 +54,7 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @UseGuards(OwnershipGuard)
     @Delete('algorithm/:id')
     async algorithmRemove(@Param('id') userId) {
@@ -58,12 +62,14 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @Post('github')
     public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @UseGuards(OwnershipGuard)
     @Patch('github/:id')
     public async gitHubModify(
@@ -74,6 +80,7 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @UseGuards(OwnershipGuard)
     @Delete('github/:id')
     public async gitHubDelete(@Param('id') userId: string) {
@@ -81,6 +88,7 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @Post('grade')
     public async createGrade(
         @Body('grade') grade: number,
@@ -90,6 +98,7 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @Patch('grade/:id')
     @UseGuards(OwnershipGuard)
     public async modifyGrade(
@@ -100,6 +109,7 @@ export class StatController {
         await this.totalService.updateTotal(userId);
     }
 
+    @ApiTags('stat')
     @Delete('grade/:id')
     @UseGuards(OwnershipGuard)
     public async deleteGrade(@Param('id') userId: string) {
