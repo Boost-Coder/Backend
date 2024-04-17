@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { AlgorithmService } from './service/algorithm.service';
@@ -105,4 +106,9 @@ export class StatController {
         await this.gradeService.gradeDelete(userId);
         await this.totalService.updateTotal(userId);
     }
+
+    // @Get('github/redirect')
+    // public async redirect(@Query('code') code: string) {
+    //     await this.githubService.redirect(code);
+    // }
 }
