@@ -8,6 +8,7 @@ import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
+import { RankListOptionDto } from '../../rank/rank-list-option.dto';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -23,6 +24,17 @@ export class AlgorithmService {
     async findAlgorithm(userId: string) {
         return await this.algorithmRepository.findOneById(userId);
     }
+
+    async getAlgorithms(options: RankListOptionDto) {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.algorithmRepository.findAlgorithmWithRank(options);
+    }
+
     async createAlgorithm(userId: string, bojId: string) {
         const bojInfo = await this.getBOJInfo(bojId);
         const isExist = await this.algorithmRepository.findOneById(userId);
