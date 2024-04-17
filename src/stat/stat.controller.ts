@@ -18,7 +18,17 @@ import { OwnershipGuard } from '../auth/guard/ownership.guard';
 import { CreateGithubDto } from './dto/createGitub.dto';
 import { StatFindDto } from './dto/stat-find.dto';
 import { TotalService } from './service/total.service';
-import { ApiTags } from '@nestjs/swagger';
+import {
+    ApiBearerAuth,
+    ApiForbiddenResponse,
+    ApiInternalServerErrorResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags,
+    ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { GetUsersResponseDto } from '../user/dto/get-users-response.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -31,6 +41,29 @@ export class StatController {
     ) {}
 
     @ApiTags('stat')
+    @ApiOperation({
+        summary: '유저의 개발 역량 반환 API',
+        description:
+            '유저의 개발 역량을 반환한다. 깃허브, 알고리즘, 학점, 종합 점수를 반환한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저 개발 역량 반환 성공',
+        type: StatFindDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @Get(':id')
     async statFind(@Param('id') userId: string): Promise<StatFindDto> {
         return await this.totalService.findStat(userId);

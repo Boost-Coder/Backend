@@ -27,7 +27,7 @@ import { GetUsersResponseDto } from './dto/get-users-response.dto';
 @Controller('api/users')
 export class UserController {
     constructor(private userService: UserService) {}
-
+    환;
     @ApiTags('users')
     @ApiOperation({
         summary: '유저 개인정보 반환 API',
@@ -43,6 +43,10 @@ export class UserController {
     })
     @ApiForbiddenResponse({
         description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
     })
     @ApiInternalServerErrorResponse({
         description: '서버 오류',
