@@ -33,7 +33,7 @@ export class AuthService {
         }
         const accessToken = this.generateAccessToken(user.userId);
         const refreshToken = this.generateRefreshToken(user.userId);
-        return { accessToken, refreshToken, isMember };
+        return { accessToken, refreshToken, isMember, userId: user.userId };
     }
 
     isMember(user: User) {
@@ -147,7 +147,6 @@ export class AuthService {
             return { isAuthorized: isSejongJson.result.is_auth };
         }
     }
-
 
     public async checkNicknameDuplicate(nickname: string) {
         const isExist = await this.userService.checkNicknameDuplicate(nickname);
