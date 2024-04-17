@@ -27,14 +27,13 @@ export class AuthService {
     async logInOrSignUp(providerId: string) {
         let user = await this.userService.findUserByProviderId(providerId);
         const isMember = this.isMember(user);
-        const userId = user.id;
         if (!user) {
             user = await this.userService.createUser(providerId);
             await this.totalService.createTotalPoint(user.userId);
         }
         const accessToken = this.generateAccessToken(user.userId);
         const refreshToken = this.generateRefreshToken(user.userId);
-        return { accessToken, refreshToken, isMember, userId };
+        return { accessToken, refreshToken, isMember, userId: user.studentId };
     }
 
     isMember(user: User) {
