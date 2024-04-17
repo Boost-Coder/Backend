@@ -21,6 +21,6 @@ import { TotalRepository } from './repository/total.repository';
         TotalService,
         TotalRepository,
     ],
-    exports: [TotalService],
+    exports: [TotalService, GithubService, AlgorithmService, GradeService],
 })
 export class StatModule {}
