@@ -16,6 +16,15 @@ async function bootstrap() {
         .addTag('users')
         .addTag('stat')
         .addTag('rank')
+        .addBearerAuth(
+            {
+                type: 'http',
+                scheme: 'bearer',
+                name: 'JWT',
+                in: 'header',
+            },
+            'accessToken',
+        )
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
