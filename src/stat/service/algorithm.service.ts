@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ConflictException,
     Injectable,
     Logger,
     NotFoundException,
@@ -39,7 +40,7 @@ export class AlgorithmService {
         const bojInfo = await this.getBOJInfo(bojId);
         const isExist = await this.algorithmRepository.findOneById(userId);
         if (isExist) {
-            throw new BadRequestException('이미 등록했습니다.');
+            throw new ConflictException('이미 등록했습니다.');
         }
         const algorithm: Algorithm = new Algorithm();
         algorithm.userId = userId;
