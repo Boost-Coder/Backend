@@ -33,7 +33,7 @@ export class AuthService {
         }
         const accessToken = this.generateAccessToken(user.userId);
         const refreshToken = this.generateRefreshToken(user.userId);
-        return { accessToken, refreshToken, isMember, userId: user.studentId };
+        return { accessToken, refreshToken, isMember, userId: user.userId };
     }
 
     isMember(user: User) {
