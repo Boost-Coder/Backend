@@ -15,6 +15,7 @@ import {
     ApiBearerAuth,
     ApiForbiddenResponse,
     ApiInternalServerErrorResponse,
+    ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
     ApiTags,
@@ -52,6 +53,27 @@ export class UserController {
     }
 
     @ApiTags('users')
+    @ApiOperation({
+        summary: '유저 정보 수정 API',
+        description: '회원정보를 수정한다. nickname 만 수정가능하다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '닉네임 수정 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @UseGuards(OwnershipGuard)
     @Put(':id')
     async userModify(
