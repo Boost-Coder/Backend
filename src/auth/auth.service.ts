@@ -136,7 +136,7 @@ export class AuthService {
         });
 
         const isSejongJson = await isSejong.json();
-        if (!isSejongJson.result.is_auth) return { isSejong: false };
+        if (!isSejongJson.result.is_auth) return { isAuthorized: false };
         else {
             const updateUserDto = new UpdateUserInfoDto();
             updateUserDto.name = isSejongJson.result.body.name;
