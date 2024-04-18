@@ -9,6 +9,11 @@ import { UserModule } from './user/user.module';
 import { StatModule } from './stat/stat.module';
 import { RankModule } from './rank/rank.module';
 import * as process from 'process';
+import { HttpLoggerInterceptor } from './utils/httpLoggerInterceptor';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { HttpExceptionFilter } from './utils/httpExceptionFilter';
+import { WinstonModule } from 'nest-winston';
+import { transports } from 'winston';
 
 @Module({
     imports: [
@@ -25,6 +30,16 @@ import * as process from 'process';
         RankModule,
     ],
     controllers: [AppController],
-    providers: [AppService],
+    providers: [
+        AppService,
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: HttpLoggerInterceptor,
+        },
+        {
+            provide: APP_FILTER,
+            useClass: HttpExceptionFilter,
+        },
+    ],
 })
 export class AppModule {}
