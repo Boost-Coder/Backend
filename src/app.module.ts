@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { StatModule } from './stat/stat.module';
-import { RankModule } from './rank/rank.module';
 import * as process from 'process';
 
 @Module({
