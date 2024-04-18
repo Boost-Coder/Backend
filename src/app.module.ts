@@ -22,7 +22,6 @@ import * as process from 'process';
         AuthModule,
         UserModule,
         StatModule,
-        RankModule,
     ],
     controllers: [AppController],
     providers: [AppService],
