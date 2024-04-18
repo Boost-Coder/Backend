@@ -5,6 +5,7 @@ import { REQUEST } from '@nestjs/core';
 import { Algorithm } from '../../Entity/algorithm';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
+import { RankController } from '../rank.controller';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AlgorithmRepository extends BaseRepository {
@@ -42,6 +43,28 @@ export class AlgorithmRepository extends BaseRepository {
             .addOrderBy('user_id')
             .limit(3);
         return await queryBuilder.getRawMany();
+    }
+
+    public async findIndividualAlgorithmRank(
+        userId: string,
+        options: RankListOptionDto,
+    ) {
+        const queryBuilder = this.repository
+            .createQueryBuilder()
+            .select(['b.rank', 'b.user_id'])
+            .distinct(true)
+            .from((sub) => {
+                return sub
+                    .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
+                    .addSelect('a.user_id', 'user_id')
+                    .addSelect('a.point', 'point')
+                    .from(Algorithm, 'a')
+                    .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .where(this.createClassificationOption(options));
+            }, 'b')
+            .where(`b.user_id = ${userId}`);
+
+        return await queryBuilder.getRawOne();
     }
 
     createCursorOption(options: RankListOptionDto) {

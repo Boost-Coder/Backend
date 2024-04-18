@@ -116,4 +116,14 @@ export class AlgorithmService {
     private calculatePoint(bojInfo: BOJInfo) {
         return 0;
     }
+
+    public async getIndividualAlgorithmRank(
+        userId: string,
+        options: RankListOptionDto,
+    ) {
+        return await this.algorithmRepository.findIndividualAlgorithmRank(
+            userId,
+            options,
+        );
+    }
 }
