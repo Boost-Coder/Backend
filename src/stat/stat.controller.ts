@@ -142,7 +142,7 @@ export class StatController {
         description: '알고리즘 역량을 삭제한다.',
     })
     @ApiBearerAuth('accessToken')
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: '알고리즘 역량 삭제 성공',
     })
     @ApiUnauthorizedResponse({
@@ -197,6 +197,28 @@ export class StatController {
     }
 
     @ApiTags('stat')
+    @ApiOperation({
+        summary: '깃허브 역량 수정 API',
+        description:
+            '깃허브 access token을 수정한다. 즉 깃허브 연동 정보가 변한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '깃허브 역량 수정 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @UseGuards(OwnershipGuard)
     @Patch('github/:id')
     public async gitHubModify(
@@ -208,6 +230,27 @@ export class StatController {
     }
 
     @ApiTags('stat')
+    @ApiOperation({
+        summary: '깃허브 역량 삭제 API',
+        description: '깃허브 역량을 삭제한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '깃허브 역량 삭제 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우, user에 알고리즘이 등록되지 않은 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @UseGuards(OwnershipGuard)
     @Delete('github/:id')
     public async gitHubDelete(@Param('id') userId: string) {
@@ -265,7 +308,7 @@ export class StatController {
         description: '학점을 수정한다.',
     })
     @ApiBearerAuth('accessToken')
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: '학점 역량 수정 성공',
     })
     @ApiUnauthorizedResponse({
@@ -307,7 +350,7 @@ export class StatController {
         description: '학점을 삭제한다.',
     })
     @ApiBearerAuth('accessToken')
-    @ApiCreatedResponse({
+    @ApiOkResponse({
         description: '학점 역량 삭제 성공',
     })
     @ApiUnauthorizedResponse({
