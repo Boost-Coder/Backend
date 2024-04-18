@@ -9,7 +9,7 @@ import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -26,7 +26,7 @@ export class AlgorithmService {
         return await this.algorithmRepository.findOneById(userId);
     }
 
-    async getAlgorithms(options: RankListOptionDto) {
+    async getAlgorithms(options: RankListOptionDto): Promise<[RankListDto]> {
         if (
             (options.cursorPoint && !options.cursorUserId) ||
             (!options.cursorPoint && options.cursorUserId)
