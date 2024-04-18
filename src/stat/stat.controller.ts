@@ -166,6 +166,30 @@ export class StatController {
     }
 
     @ApiTags('stat')
+    @ApiOperation({
+        summary: '깃허브 역량 등록 API',
+        description: 'github OAuth에서 얻은 access token을 등록한다. ',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiCreatedResponse({
+        description: '깃허브 역량 등록 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiConflictResponse({
+        description: '이미 등록한 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @Post('github')
     public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
