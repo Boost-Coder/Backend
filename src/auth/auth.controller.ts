@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AppleLoginDto, AppleLoginResponseDto } from './appleLogin.dto';
 import { AuthService } from './auth.service';
-import { SejongAuthDto } from './sejongAuth.dto';
+import { SejongAuthDto, SejongAuthResponseDto } from './sejongAuth.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { UserId } from '../decorator/user-id.decorator';
 import {
@@ -21,6 +21,7 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { GetUsersResponseDto } from '../user/dto/get-users-response.dto';
+import { CheckNicknameResponseDto } from './check-nickname.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -64,6 +65,29 @@ export class AuthController {
     }
 
     @ApiTags('auth')
+    @ApiOperation({
+        summary: '세종대 학생 인증 API',
+        description:
+            '세종대 학생인지 인증한다. 학번과 비밀번호를 받아 세종대 서버에서 인증한다. 인증에 성공하면 세종대 서버에서 학번, 학과 이름 등을 등록한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '로그인 성공 혹은 회원가입 성공',
+        type: SejongAuthResponseDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @Post('sejong')
     @UseGuards(JwtAuthGuard)
     public async sejongAuth(
@@ -74,6 +98,28 @@ export class AuthController {
     }
 
     @ApiTags('auth')
+    @ApiOperation({
+        summary: '닉네임 중복 확인 API',
+        description: '등록하려는 닉네임이 중복이 되는지 확인한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '닉네임 중복 여부를 반환',
+        type: CheckNicknameResponseDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @Post('checkNickname')
     @UseGuards(JwtAuthGuard)
     public async checkNickname(@Body('nickname') nickname: string) {

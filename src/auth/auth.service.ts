@@ -14,6 +14,7 @@ import { SejongAuthDto } from './sejongAuth.dto';
 import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { TotalService } from '../stat/service/total.service';
+import { CheckNicknameResponseDto } from './check-nickname.dto';
 
 @Injectable()
 export class AuthService {
@@ -148,7 +149,9 @@ export class AuthService {
         }
     }
 
-    public async checkNicknameDuplicate(nickname: string) {
+    public async checkNicknameDuplicate(
+        nickname: string,
+    ): Promise<CheckNicknameResponseDto> {
         const isExist = await this.userService.checkNicknameDuplicate(nickname);
 
         if (isExist) {
