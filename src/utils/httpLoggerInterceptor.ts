@@ -23,14 +23,16 @@ export class HttpLoggerInterceptor implements NestInterceptor {
             tap((data) => {
                 const request = context.switchToHttp().getRequest();
                 const response = context.switchToHttp().getResponse();
+                const body = JSON.stringify(request.body);
                 this.logger.debug(
-                    `<${request.userId}> ${request.method} ${request.url} ${new Date()} ${response.statusCode} ${response.statusMessage}`,
+                    `<${request.userId}> ${request.method} ${request.url} ${body} ${new Date()} ${response.statusCode} ${response.statusMessage}`,
                     'HTTP',
                 );
             }),
             catchError((err) => {
+                const body = JSON.stringify(request.body);
                 this.logger.error(
-                    `<${request['userId']}> ${request.method} ${request.url} ${request.body} ${new Date()} [Error]${err}`,
+                    `<${request['userId']}> ${request.method} ${request.url} ${body} ${new Date()} [Error]${err}`,
                     'HTTP ERROR',
                 );
                 return throwError(err);
