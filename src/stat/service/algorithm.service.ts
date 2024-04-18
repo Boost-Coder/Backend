@@ -8,7 +8,7 @@ import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
-import { RankListOptionDto } from '../../rank/rank-list-option.dto';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
