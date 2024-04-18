@@ -27,7 +27,7 @@ import { GetUsersResponseDto } from './dto/get-users-response.dto';
 @Controller('api/users')
 export class UserController {
     constructor(private userService: UserService) {}
-    환;
+
     @ApiTags('users')
     @ApiOperation({
         summary: '유저 개인정보 반환 API',
