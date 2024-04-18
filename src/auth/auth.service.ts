@@ -3,18 +3,18 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { AppleLoginDto } from './appleLogin.dto';
+import { AppleLoginDto } from './dto/appleLogin.dto';
 import * as jwt from 'jsonwebtoken';
 import * as jwksClient from 'jwks-rsa';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../Entity/user';
 import { ConfigService } from '@nestjs/config';
-import { SejongAuthDto } from './sejongAuth.dto';
+import { SejongAuthDto } from './dto/sejongAuth.dto';
 import { UpdateUserInfoDto } from '../user/dto/update-user-info.dto';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { TotalService } from '../stat/service/total.service';
-import { CheckNicknameResponseDto } from './check-nickname.dto';
+import { CheckNicknameResponseDto } from './dto/check-nickname.dto';
 
 @Injectable()
 export class AuthService {

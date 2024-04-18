@@ -5,13 +5,14 @@ import {
     UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
-import { AppleLoginDto, AppleLoginResponseDto } from './appleLogin.dto';
+import { AppleLoginDto, AppleLoginResponseDto } from './dto/appleLogin.dto';
 import { AuthService } from './auth.service';
-import { SejongAuthDto, SejongAuthResponseDto } from './sejongAuth.dto';
+import { SejongAuthDto, SejongAuthResponseDto } from './dto/sejongAuth.dto';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { UserId } from '../decorator/user-id.decorator';
 import {
     ApiBearerAuth,
+    ApiBody,
     ApiForbiddenResponse,
     ApiInternalServerErrorResponse,
     ApiNotFoundResponse,
@@ -20,8 +21,8 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUsersResponseDto } from '../user/dto/get-users-response.dto';
-import { CheckNicknameResponseDto } from './check-nickname.dto';
+import { CheckNicknameResponseDto } from './dto/check-nickname.dto';
+import { RefreshTokenResponseDto } from './dto/refresh-token.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -127,6 +128,39 @@ export class AuthController {
     }
 
     @ApiTags('auth')
+    @ApiOperation({
+        summary: '토큰 재발급 API',
+        description:
+            'refresh token을 사용하여 access token과 refresh token을 재발급한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: 'access token과 refresh token을 반환',
+        type: RefreshTokenResponseDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                refreshToken: {
+                    type: 'number',
+                },
+            },
+        },
+    })
     @Post('refresh')
     public refreshTokens(@Body('refreshToken') refreshToken: string) {
         return this.authService.sendTokens(refreshToken);
