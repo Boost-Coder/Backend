@@ -19,7 +19,6 @@ import { CreateGithubDto } from './dto/createGitub.dto';
 import { StatFindDto } from './dto/stat-find.dto';
 import { TotalService } from './service/total.service';
 import {
-    ApiBadRequestResponse,
     ApiBearerAuth,
     ApiBody,
     ApiConflictResponse,
@@ -32,7 +31,6 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUsersResponseDto } from '../user/dto/get-users-response.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -106,6 +104,28 @@ export class StatController {
     }
 
     @ApiTags('stat')
+    @ApiOperation({
+        summary: '알고리즘 역량 수정 API',
+        description:
+            'BOJ 아이디를 수정한다. 없는 BOJ 아이디는 수정되지 않는다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiCreatedResponse({
+        description: '알고리즘 역량 수정 성공',
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiNotFoundResponse({
+        description:
+            'user가 존재하지 않는 경우. 즉, 작업하려는 user가 존재하지 않는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     @UseGuards(OwnershipGuard)
     @Patch('algorithm/:id')
     async algorithmModify(
