@@ -3,7 +3,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
 import { Algorithm } from '../../Entity/algorithm';
-import { RankListOptionDto } from '../../rank/rank-list-option.dto';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
 
 @Injectable({ scope: Scope.REQUEST })
