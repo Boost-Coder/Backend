@@ -18,7 +18,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const status = exception.getStatus();
 
         this.logger.error(
-            `<${request['userId']}> ${request.method} ${request.url}  [Error]${exception}`,
+            `${request.method} ${request.url} ${new Date()} [Error] ${exception} `,
             'HTTP ERROR',
         );
 
