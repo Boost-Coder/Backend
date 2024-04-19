@@ -9,4 +9,7 @@ export class StatFindDto {
 
     @ApiProperty()
     grade: number;
+
+    @ApiProperty()
+    totalPoint: number;
 }
