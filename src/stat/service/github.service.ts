@@ -166,6 +166,6 @@ export class GithubService {
         ) {
             throw new BadRequestException('Cursor Element Must Be Two');
         }
-        return await this.githubRepository.findGithubWithRank(options);
+        return await this.githubRepository.findWithRank(options);
     }
 }
