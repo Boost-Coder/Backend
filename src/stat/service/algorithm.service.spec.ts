@@ -3,12 +3,14 @@ import { AlgorithmService } from './algorithm.service';
 import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
 
 const mockAlgorithmRepository = {
     save: jest.fn(),
     findOneById: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
+    findAlgorithmWithRank: jest.fn(),
 };
 
 jest.mock('axios');
@@ -219,6 +221,27 @@ describe('AlgorithmService', () => {
             algorithmRepository.findOneById.mockResolvedValue(null);
             await expect(service.removeAlgorithm(userId)).rejects.toThrow(
                 'algorithm not found',
+            );
+        });
+    });
+
+    describe('getAlgorithms', function () {
+        it('cursor 를 하나만 보내면 오류를 던진다.', function () {
+            const options1: RankListOptionDto = {
+                cursorUserId: null,
+                major: null,
+                cursorPoint: 12,
+            };
+            const options2: RankListOptionDto = {
+                cursorUserId: 'qwe',
+                major: null,
+                cursorPoint: null,
+            };
+            expect(service.getAlgorithms(options1)).rejects.toThrow(
+                'Cursor Element Must Be Two',
+            );
+            expect(service.getAlgorithms(options2)).rejects.toThrow(
+                'Cursor Element Must Be Two',
             );
         });
     });
