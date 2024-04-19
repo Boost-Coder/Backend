@@ -38,7 +38,7 @@ export class TotalService {
         ) {
             throw new BadRequestException('Cursor Element Must Be Two');
         }
-        return await this.totalRepository.findTotalWithRank(options);
+        return await this.totalRepository.findWithRank(options);
     }
 
     async createTotalPoint(userId: string) {
