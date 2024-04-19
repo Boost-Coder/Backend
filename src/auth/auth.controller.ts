@@ -121,6 +121,16 @@ export class AuthController {
     @ApiInternalServerErrorResponse({
         description: '서버 오류',
     })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                nickname: {
+                    type: 'string',
+                },
+            },
+        },
+    })
     @Post('checkNickname')
     @UseGuards(JwtAuthGuard)
     public async checkNickname(@Body('nickname') nickname: string) {
