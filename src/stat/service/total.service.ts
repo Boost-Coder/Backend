@@ -7,6 +7,8 @@ import { GradeService } from './grade.service';
 import { Github } from '../../Entity/github';
 import { Grade } from '../../Entity/grade';
 import { Algorithm } from '../../Entity/algorithm';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class TotalService {
@@ -52,5 +54,12 @@ export class TotalService {
 
     calculateTotalPoint(github: Github, algorithm: Algorithm, grade: Grade) {
         return 0;
+    }
+
+    public async getIndividualTotalRank(userId: string, options: PointFindDto) {
+        return await this.totalRepository.findIndividualAlgorithmRank(
+            userId,
+            options,
+        );
     }
 }

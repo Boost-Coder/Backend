@@ -6,6 +6,7 @@ import { Algorithm } from '../../Entity/algorithm';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
 import { RankController } from '../rank.controller';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AlgorithmRepository extends BaseRepository {
@@ -49,11 +50,11 @@ export class AlgorithmRepository extends BaseRepository {
 
     public async findIndividualAlgorithmRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
-            .select(['b.rank', 'b.user_id'])
+            .select(['b.rank', 'b.user_id', 'b.major'])
             .distinct(true)
             .from((sub) => {
                 return sub
@@ -62,6 +63,7 @@ export class AlgorithmRepository extends BaseRepository {
                     .addSelect('a.point', 'point')
                     .from(Algorithm, 'a')
                     .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .addSelect('u.major', 'major')
                     .where(this.createClassificationOption(options));
             }, 'b')
             .where(`b.user_id = ${userId}`);
@@ -77,7 +79,7 @@ export class AlgorithmRepository extends BaseRepository {
         }
     }
 
-    createClassificationOption(options: RankListOptionDto) {
+    createClassificationOption(options: PointFindDto) {
         if (options.major != null) {
             return `u.major like '${options.major}'`;
         } else {

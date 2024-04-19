@@ -9,8 +9,10 @@ import { GradeRepository } from './repository/grade.repository';
 import { TotalService } from './service/total.service';
 import { TotalRepository } from './repository/total.repository';
 import { RankController } from './rank.controller';
+import { UserModule } from '../user/user.module';
 
 @Module({
+    imports: [UserModule],
     controllers: [StatController, RankController],
     providers: [
         GithubService,
