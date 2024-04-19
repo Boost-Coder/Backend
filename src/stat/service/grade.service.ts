@@ -73,6 +73,6 @@ export class GradeService {
         ) {
             throw new BadRequestException('Cursor Element Must Be Two');
         }
-        return await this.gradeRepository.findGradeWithRank(options);
+        return await this.gradeRepository.findWithRank(options);
     }
 }
