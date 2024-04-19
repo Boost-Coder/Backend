@@ -160,4 +160,13 @@ export class GithubService {
     //     github.githubId = userResource.id;
     //     await this.githubRepository.save(github);
     // }
+    async getGithubRank(options: RankListOptionDto) {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.githubRepository.findGithubWithRank(options);
+    }
 }
