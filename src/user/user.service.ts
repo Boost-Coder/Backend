@@ -8,6 +8,7 @@ import { User } from '../Entity/user';
 import { v4 as uuidv4 } from 'uuid';
 import { QueryFailedError } from 'typeorm';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
+import { GetUsersResponseDto } from './dto/get-users-response.dto';
 
 @Injectable()
 export class UserService {
@@ -18,7 +19,7 @@ export class UserService {
         return user;
     }
 
-    async findUserByUserId(userId: string) {
+    async findUserByUserId(userId: string): Promise<GetUsersResponseDto> {
         const user = await this.userRepository.findOneByUserId(userId);
         if (!user) {
             throw new NotFoundException('User Not Found');

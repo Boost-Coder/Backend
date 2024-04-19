@@ -3,7 +3,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
 import { Algorithm } from '../../Entity/algorithm';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
 import { RankController } from '../rank.controller';
 
@@ -23,7 +23,9 @@ export class AlgorithmRepository extends BaseRepository {
         return await this.repository.findOneBy({ userId: userId });
     }
 
-    async findAlgorithmWithRank(options: RankListOptionDto) {
+    async findAlgorithmWithRank(
+        options: RankListOptionDto,
+    ): Promise<[RankListDto]> {
         const queryBuilder = this.repository
             .createQueryBuilder()
             .select(['b.rank', 'b.user_id', 'b.point', 'b.nickname'])
@@ -42,7 +44,7 @@ export class AlgorithmRepository extends BaseRepository {
             .orderBy('point', 'DESC')
             .addOrderBy('user_id')
             .limit(3);
-        return await queryBuilder.getRawMany();
+        return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
     }
 
     public async findIndividualAlgorithmRank(

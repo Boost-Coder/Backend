@@ -1,5 +1,6 @@
 import {
     BadRequestException,
+    ConflictException,
     Injectable,
     Logger,
     NotFoundException,
@@ -8,7 +9,7 @@ import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -25,7 +26,7 @@ export class AlgorithmService {
         return await this.algorithmRepository.findOneById(userId);
     }
 
-    async getAlgorithms(options: RankListOptionDto) {
+    async getAlgorithms(options: RankListOptionDto): Promise<[RankListDto]> {
         if (
             (options.cursorPoint && !options.cursorUserId) ||
             (!options.cursorPoint && options.cursorUserId)
@@ -39,7 +40,7 @@ export class AlgorithmService {
         const bojInfo = await this.getBOJInfo(bojId);
         const isExist = await this.algorithmRepository.findOneById(userId);
         if (isExist) {
-            throw new BadRequestException('이미 등록했습니다.');
+            throw new ConflictException('이미 등록했습니다.');
         }
         const algorithm: Algorithm = new Algorithm();
         algorithm.userId = userId;
