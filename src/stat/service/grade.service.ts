@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { GradeRepository } from '../repository/grade.repository';
 import { Grade } from '../../Entity/grade';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
 
 @Injectable()
 export class GradeService {
@@ -55,5 +56,15 @@ export class GradeService {
 
     public calculatePoint(grade: number) {
         return 0;
+    }
+
+    public async getIndividualGradeRank(
+        userId: string,
+        options: RankListOptionDto,
+    ) {
+        return await this.gradeRepository.findIndividualGradeRank(
+            userId,
+            options,
+        );
     }
 }
