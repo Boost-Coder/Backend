@@ -127,7 +127,6 @@ export class RankController {
         return await this.totalService.getTotalRank(options);
     }
 
-    @Get('/users/:id')
     @ApiTags('rank')
     @ApiOperation({
         summary: '유저의 각 부문 별 랭킹 API',
@@ -148,10 +147,14 @@ export class RankController {
     @ApiInternalServerErrorResponse({
         description: '서버 오류',
     })
-    async findUsersRank(@Param('id') userId, @Query() options: PointFindDto) {
+    @Get('/users/:id')
+    async findUsersRank(
+        @Param('id') userId: string,
+        @Query() options: PointFindDto,
+    ) {
         const user = await this.userService.findUserByUserId(userId);
 
-        if (options && user.major !== options.major) {
+        if (options.major && user.major !== options.major) {
             return new RankFindDto(null, null, null, null);
         } else {
             const algorithmRank =
