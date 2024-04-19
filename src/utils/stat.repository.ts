@@ -19,7 +19,8 @@ export class StatRepository extends BaseRepository {
     async findWithRank(options: RankListOptionDto): Promise<[RankListDto]> {
         const queryBuilder = this.repository
             .createQueryBuilder()
-            .select(['b.rank', 'b.user_id', 'b.point', 'b.nickname'])
+            .select(['b.rank', 'b.point', 'b.nickname'])
+            .addSelect('b.user_id', 'userId')
             .distinct(true)
             .from((sub) => {
                 return sub
@@ -33,7 +34,7 @@ export class StatRepository extends BaseRepository {
             }, 'b')
             .where(this.createCursorOption(options))
             .orderBy('point', 'DESC')
-            .addOrderBy('user_id')
+            .addOrderBy('userId')
             .limit(3);
         return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
     }
