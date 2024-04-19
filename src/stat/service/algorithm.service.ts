@@ -34,7 +34,7 @@ export class AlgorithmService {
         ) {
             throw new BadRequestException('Cursor Element Must Be Two');
         }
-        return await this.algorithmRepository.findAlgorithmWithRank(options);
+        return await this.algorithmRepository.findWithRank(options);
     }
 
     async createAlgorithm(userId: string, bojId: string) {
