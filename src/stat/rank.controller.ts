@@ -76,7 +76,7 @@ export class RankController {
     async findUsersRank(@Param('id') userId, @Query() options: PointFindDto) {
         const user = await this.userService.findUserByUserId(userId);
 
-        if (user.major !== options.major) {
+        if (options && user.major !== options.major) {
             return new RankFindDto(null, null, null, null);
         } else {
             const algorithmRank =
@@ -99,6 +99,7 @@ export class RankController {
                 userId,
                 options,
             );
+            console.log(algorithmRank, gradeRank, githubRank, totalRank);
             return new RankFindDto(
                 totalRank ? totalRank.rank : null,
                 algorithmRank ? algorithmRank.rank : null,
