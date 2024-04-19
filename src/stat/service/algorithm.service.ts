@@ -123,7 +123,7 @@ export class AlgorithmService {
         userId: string,
         options: PointFindDto,
     ) {
-        return await this.algorithmRepository.findIndividualAlgorithmRank(
+        return await this.algorithmRepository.findIndividualRank(
             userId,
             options,
         );

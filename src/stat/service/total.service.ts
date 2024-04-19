@@ -68,9 +68,6 @@ export class TotalService {
     }
 
     public async getIndividualTotalRank(userId: string, options: PointFindDto) {
-        return await this.totalRepository.findIndividualAlgorithmRank(
-            userId,
-            options,
-        );
+        return await this.totalRepository.findIndividualRank(userId, options);
     }
 }

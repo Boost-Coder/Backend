@@ -60,10 +60,7 @@ export class GradeService {
     }
 
     public async getIndividualGradeRank(userId: string, options: PointFindDto) {
-        return await this.gradeRepository.findIndividualGradeRank(
-            userId,
-            options,
-        );
+        return await this.gradeRepository.findIndividualRank(userId, options);
     }
 
     async getGradeRank(options: RankListOptionDto): Promise<[RankListDto]> {

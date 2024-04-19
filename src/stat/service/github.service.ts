@@ -134,10 +134,7 @@ export class GithubService {
         userId: string,
         options: PointFindDto,
     ) {
-        return await this.githubRepository.findIndividualGithubRank(
-            userId,
-            options,
-        );
+        return await this.githubRepository.findIndividualRank(userId, options);
     }
 
     // public async redirect(code: string) {

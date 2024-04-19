@@ -38,7 +38,7 @@ export class AlgorithmRepository extends StatRepository {
                     .addSelect('u.major', 'major')
                     .where(this.createClassificationOption(options));
             }, 'b')
-            .where(`b.user_id = ${userId}`);
+            .where(`b.user_id = '${userId}'`);
 
         return await queryBuilder.getRawOne();
     }
