@@ -1,7 +1,6 @@
 import { BaseRepository } from '../../utils/base.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Github } from '../../Entity/github';
 import { REQUEST } from '@nestjs/core';
 import { Grade } from '../../Entity/grade';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';

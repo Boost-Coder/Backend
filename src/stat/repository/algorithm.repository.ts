@@ -5,7 +5,6 @@ import { REQUEST } from '@nestjs/core';
 import { Algorithm } from '../../Entity/algorithm';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
-import { RankController } from '../rank.controller';
 import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable({ scope: Scope.REQUEST })

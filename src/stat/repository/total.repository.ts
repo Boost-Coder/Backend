@@ -1,6 +1,5 @@
 import { BaseRepository } from '../../utils/base.repository';
 import { DataSource, Repository } from 'typeorm';
-import { Grade } from '../../Entity/grade';
 import { Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { TotalPoint } from '../../Entity/totalPoint';
@@ -8,7 +7,6 @@ import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { Algorithm } from '../../Entity/algorithm';
 import { User } from '../../Entity/user';
 import { PointFindDto } from '../dto/rank-find.dto';
-import { Github } from '../../Entity/github';
 
 export class TotalRepository extends BaseRepository {
     private repository: Repository<TotalPoint>;

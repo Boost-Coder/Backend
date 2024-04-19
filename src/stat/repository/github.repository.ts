@@ -1,10 +1,9 @@
 import { BaseRepository } from '../../utils/base.repository';
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Github } from '../../Entity/github';
 import { DataSource, Repository } from 'typeorm';
 import { REQUEST } from '@nestjs/core';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
-import { Algorithm } from '../../Entity/algorithm';
 import { User } from '../../Entity/user';
 import { PointFindDto } from '../dto/rank-find.dto';
 

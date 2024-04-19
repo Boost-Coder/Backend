@@ -11,8 +11,6 @@ import * as process from 'process';
 import { HttpLoggerInterceptor } from './utils/httpLoggerInterceptor';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/httpExceptionFilter';
-import { WinstonModule } from 'nest-winston';
-import { transports } from 'winston';
 
 @Module({
     imports: [
