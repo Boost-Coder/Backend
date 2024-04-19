@@ -52,7 +52,7 @@ export class GradeRepository extends BaseRepository {
                     .select('RANK() OVER (ORDER BY g.point DESC)', 'rank')
                     .addSelect('g.user_id', 'user_id')
                     .addSelect('g.point', 'point')
-                    .from(Github, 'g')
+                    .from(Grade, 'g')
                     .innerJoin(User, 'u', 'g.user_id = u.user_id')
                     .where(this.createClassificationOption(options));
             }, 'b')
