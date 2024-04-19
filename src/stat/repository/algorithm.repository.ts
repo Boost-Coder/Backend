@@ -53,7 +53,7 @@ export class AlgorithmRepository extends BaseRepository {
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
-            .select(['b.rank', 'b.user_id'])
+            .select(['b.rank', 'b.user_id', 'b.major'])
             .distinct(true)
             .from((sub) => {
                 return sub
@@ -62,6 +62,7 @@ export class AlgorithmRepository extends BaseRepository {
                     .addSelect('a.point', 'point')
                     .from(Algorithm, 'a')
                     .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .addSelect('u.major', 'major')
                     .where(this.createClassificationOption(options));
             }, 'b')
             .where(`b.user_id = ${userId}`);
