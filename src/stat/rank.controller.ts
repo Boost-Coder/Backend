@@ -99,7 +99,6 @@ export class RankController {
                 userId,
                 options,
             );
-            console.log(algorithmRank, gradeRank, githubRank, totalRank);
             return new RankFindDto(
                 totalRank ? totalRank.rank : null,
                 algorithmRank ? algorithmRank.rank : null,
