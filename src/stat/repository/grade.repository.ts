@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { Github } from '../../Entity/github';
 import { REQUEST } from '@nestjs/core';
 import { Grade } from '../../Entity/grade';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
 import { PointFindDto } from '../dto/rank-find.dto';
 
@@ -59,6 +59,38 @@ export class GradeRepository extends BaseRepository {
             .where(`b.user_id = ${userId}`);
 
         return await queryBuilder.getRawOne();
+    }
+
+    async findGradeWithRank(
+        options: RankListOptionDto,
+    ): Promise<[RankListDto]> {
+        const queryBuilder = this.repository
+            .createQueryBuilder()
+            .select(['b.rank', 'b.user_id', 'b.point', 'b.nickname'])
+            .distinct(true)
+            .from((sub) => {
+                return sub
+                    .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
+                    .addSelect('a.user_id', 'user_id')
+                    .addSelect('a.point', 'point')
+                    .addSelect('u.nickname', 'nickname')
+                    .from(Grade, 'a')
+                    .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .where(this.createClassificationOption(options));
+            }, 'b')
+            .where(this.createCursorOption(options))
+            .orderBy('point', 'DESC')
+            .addOrderBy('user_id')
+            .limit(3);
+        return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
+    }
+
+    createCursorOption(options: RankListOptionDto) {
+        if (!options.cursorPoint && !options.cursorUserId) {
+            return 'b.point > -1';
+        } else {
+            return `b.point < ${options.cursorPoint} or b.point = ${options.cursorPoint} AND b.user_id > '${options.cursorUserId}'`;
+        }
     }
 
     createClassificationOption(options: PointFindDto) {
