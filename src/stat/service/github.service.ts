@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from '../repository/github.repository';
 import { Github } from '../../Entity/github';
 import { CreateGithubDto } from '../dto/createGitub.dto';
+import { RankListOptionDto } from '../dto/rank-list-option.dto';
 
 @Injectable()
 export class GithubService {
@@ -129,23 +130,33 @@ export class GithubService {
         }
     }
 
-    public async redirect(code: string) {
-        const accessToken = await this.fetchAccessToken(code);
-        console.log(accessToken);
-        const userResource = await this.getUserResource(accessToken);
-        const isExist = await this.githubRepository.findOne(userResource.id);
-
-        if (isExist) {
-            throw new BadRequestException('이미 등록된 id 입니다');
-        }
-
-        const githubPoint = this.calculateGithubPoint(userResource);
-
-        const github = new Github();
-        github.userId = '123';
-        github.point = githubPoint;
-        github.accessToken = accessToken;
-        github.githubId = userResource.id;
-        await this.githubRepository.save(github);
+    public async getIndividualGithubRank(
+        userId: string,
+        options: RankListOptionDto,
+    ) {
+        return await this.githubRepository.findIndividualGithubRank(
+            userId,
+            options,
+        );
     }
+
+    // public async redirect(code: string) {
+    //     const accessToken = await this.fetchAccessToken(code);
+    //     console.log(accessToken);
+    //     const userResource = await this.getUserResource(accessToken);
+    //     const isExist = await this.githubRepository.findOne(userResource.id);
+    //
+    //     if (isExist) {
+    //         throw new BadRequestException('이미 등록된 id 입니다');
+    //     }
+    //
+    //     const githubPoint = this.calculateGithubPoint(userResource);
+    //
+    //     const github = new Github();
+    //     github.userId = '123';
+    //     github.point = githubPoint;
+    //     github.accessToken = accessToken;
+    //     github.githubId = userResource.id;
+    //     await this.githubRepository.save(github);
+    // }
 }
