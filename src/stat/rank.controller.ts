@@ -14,6 +14,7 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { UserService } from '../user/user.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/rank')
@@ -23,6 +24,7 @@ export class RankController {
         private readonly githubService: GithubService,
         private readonly gradeService: GradeService,
         private readonly totalService: TotalService,
+        private readonly userService: UserService,
     ) {}
     @Get('algorithm')
     @ApiTags('rank')
@@ -54,12 +56,37 @@ export class RankController {
         @Param('id') userId,
         @Query() options: RankListOptionDto,
     ) {
-        const algorithmRank =
-            await this.algorithmService.getIndividualAlgorithmRank(
+        const user = await this.userService.findUserByUserId(userId);
+
+        if (user.major !== options.major) {
+            return { total: null, algorithm: null, github: null, grade: null };
+        } else {
+            const algorithmRank =
+                await this.algorithmService.getIndividualAlgorithmRank(
+                    userId,
+                    options,
+                );
+
+            const githubRank = await this.githubService.getIndividualGithubRank(
                 userId,
                 options,
             );
 
-        return { algorithm: algorithmRank.rank };
+            const gradeRank = await this.gradeService.getIndividualGradeRank(
+                userId,
+                options,
+            );
+
+            const totalRank = await this.totalService.getIndividualTotalRank(
+                userId,
+                options,
+            );
+            return {
+                total: totalRank ? totalRank.rank : null,
+                algorithm: algorithmRank ? algorithmRank.rank : null,
+                github: githubRank ? githubRank.rank : null,
+                grade: gradeRank ? gradeRank.rank : null,
+            };
+        }
     }
 }

@@ -9,6 +9,8 @@ import { GradeRepository } from './repository/grade.repository';
 import { TotalService } from './service/total.service';
 import { TotalRepository } from './repository/total.repository';
 import { RankController } from './rank.controller';
+import { UserService } from '../user/user.service';
+import { UserRepository } from '../user/user.repository';
 
 @Module({
     controllers: [StatController, RankController],
@@ -21,6 +23,8 @@ import { RankController } from './rank.controller';
         GradeRepository,
         TotalService,
         TotalRepository,
+        UserService,
+        UserRepository,
     ],
     exports: [TotalService, GithubService, AlgorithmService, GradeService],
 })
