@@ -7,7 +7,7 @@ import { GradeService } from './grade.service';
 import { Github } from '../../Entity/github';
 import { Grade } from '../../Entity/grade';
 import { Algorithm } from '../../Entity/algorithm';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
@@ -30,6 +30,17 @@ export class TotalService {
             grade: grade ? grade.grade : null,
         };
     }
+
+    async getTotalRank(options: RankListOptionDto): Promise<[RankListDto]> {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.totalRepository.findTotalWithRank(options);
+    }
+
     async createTotalPoint(userId: string) {
         const isExist = await this.totalRepository.findOneById(userId);
 
