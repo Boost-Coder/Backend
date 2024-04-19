@@ -86,7 +86,7 @@ export class RankController {
     })
     @ApiBearerAuth('accessToken')
     @ApiOkResponse({
-        description: '학점 랭킹 반환',
+        description: '깃허브 랭킹 반환',
         type: [RankListDto],
     })
     @ApiUnauthorizedResponse({
@@ -105,7 +105,7 @@ export class RankController {
     @Get('total')
     @ApiTags('rank')
     @ApiOperation({
-        summary: '종 전체 랭킹 API',
+        summary: '종합 전체 랭킹 API',
         description:
             '학점 역량의 랭킹리스트를 반환한다. 페이지네이션이 가능하고 학과 별로 필터링 가능하다. (학번 필터링은 아직 미구현) 커서 사용시 cursorPoint, cursorUserId 두개를 동시에 넣어야한다. 각각 마지막으로 받은 유저의 점수와 유저 아이디이다.',
     })
