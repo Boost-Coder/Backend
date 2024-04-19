@@ -15,7 +15,7 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
-import { RankFindDto } from './dto/rank-find.dto';
+import { PointFindDto, RankFindDto } from './dto/rank-find.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/rank')
@@ -73,10 +73,7 @@ export class RankController {
     @ApiInternalServerErrorResponse({
         description: '서버 오류',
     })
-    async findUsersRank(
-        @Param('id') userId,
-        @Query() options: RankListOptionDto,
-    ) {
+    async findUsersRank(@Param('id') userId, @Query() options: PointFindDto) {
         const user = await this.userService.findUserByUserId(userId);
 
         if (user.major !== options.major) {

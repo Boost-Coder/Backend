@@ -6,6 +6,7 @@ import { REQUEST } from '@nestjs/core';
 import { Grade } from '../../Entity/grade';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class GradeRepository extends BaseRepository {
@@ -40,7 +41,7 @@ export class GradeRepository extends BaseRepository {
 
     public async findIndividualGradeRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
@@ -60,7 +61,7 @@ export class GradeRepository extends BaseRepository {
         return await queryBuilder.getRawOne();
     }
 
-    createClassificationOption(options: RankListOptionDto) {
+    createClassificationOption(options: PointFindDto) {
         if (options.major != null) {
             return `u.major like '${options.major}'`;
         } else {

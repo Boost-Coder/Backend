@@ -6,6 +6,7 @@ import { REQUEST } from '@nestjs/core';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { Algorithm } from '../../Entity/algorithm';
 import { User } from '../../Entity/user';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class GithubRepository extends BaseRepository {
@@ -45,7 +46,7 @@ export class GithubRepository extends BaseRepository {
 
     public async findIndividualGithubRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
@@ -65,7 +66,7 @@ export class GithubRepository extends BaseRepository {
         return await queryBuilder.getRawOne();
     }
 
-    createClassificationOption(options: RankListOptionDto) {
+    createClassificationOption(options: PointFindDto) {
         if (options.major != null) {
             return `u.major like '${options.major}'`;
         } else {

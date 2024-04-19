@@ -7,6 +7,7 @@ import { TotalPoint } from '../../Entity/totalPoint';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { Algorithm } from '../../Entity/algorithm';
 import { User } from '../../Entity/user';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 export class TotalRepository extends BaseRepository {
     private repository: Repository<TotalPoint>;
@@ -30,7 +31,7 @@ export class TotalRepository extends BaseRepository {
 
     public async findIndividualAlgorithmRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
@@ -51,7 +52,7 @@ export class TotalRepository extends BaseRepository {
         return await queryBuilder.getRawOne();
     }
 
-    createClassificationOption(options: RankListOptionDto) {
+    createClassificationOption(options: PointFindDto) {
         if (options.major != null) {
             return `u.major like '${options.major}'`;
         } else {

@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
+export class PointFindDto {
+    @ApiProperty({ required: false })
+    @IsString()
+    @IsOptional()
+    major: string;
+}
 export class RankFindDto {
     @ApiProperty()
     total: number;

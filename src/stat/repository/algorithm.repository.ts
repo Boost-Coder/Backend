@@ -6,6 +6,7 @@ import { Algorithm } from '../../Entity/algorithm';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { User } from '../../Entity/user';
 import { RankController } from '../rank.controller';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AlgorithmRepository extends BaseRepository {
@@ -49,7 +50,7 @@ export class AlgorithmRepository extends BaseRepository {
 
     public async findIndividualAlgorithmRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         const queryBuilder = this.repository
             .createQueryBuilder()
@@ -78,7 +79,7 @@ export class AlgorithmRepository extends BaseRepository {
         }
     }
 
-    createClassificationOption(options: RankListOptionDto) {
+    createClassificationOption(options: PointFindDto) {
         if (options.major != null) {
             return `u.major like '${options.major}'`;
         } else {

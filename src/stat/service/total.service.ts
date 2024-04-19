@@ -8,6 +8,7 @@ import { Github } from '../../Entity/github';
 import { Grade } from '../../Entity/grade';
 import { Algorithm } from '../../Entity/algorithm';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class TotalService {
@@ -55,10 +56,7 @@ export class TotalService {
         return 0;
     }
 
-    public async getIndividualTotalRank(
-        userId: string,
-        options: RankListOptionDto,
-    ) {
+    public async getIndividualTotalRank(userId: string, options: PointFindDto) {
         return await this.totalRepository.findIndividualAlgorithmRank(
             userId,
             options,

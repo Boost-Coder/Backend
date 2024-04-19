@@ -6,6 +6,7 @@ import {
 import { GradeRepository } from '../repository/grade.repository';
 import { Grade } from '../../Entity/grade';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class GradeService {
@@ -58,10 +59,7 @@ export class GradeService {
         return 0;
     }
 
-    public async getIndividualGradeRank(
-        userId: string,
-        options: RankListOptionDto,
-    ) {
+    public async getIndividualGradeRank(userId: string, options: PointFindDto) {
         return await this.gradeRepository.findIndividualGradeRank(
             userId,
             options,

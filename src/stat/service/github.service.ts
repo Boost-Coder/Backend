@@ -10,6 +10,7 @@ import { GithubRepository } from '../repository/github.repository';
 import { Github } from '../../Entity/github';
 import { CreateGithubDto } from '../dto/createGitub.dto';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
 export class GithubService {
@@ -132,7 +133,7 @@ export class GithubService {
 
     public async getIndividualGithubRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         return await this.githubRepository.findIndividualGithubRank(
             userId,

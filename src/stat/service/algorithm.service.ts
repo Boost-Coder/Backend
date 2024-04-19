@@ -10,6 +10,7 @@ import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
 import { NotFoundError } from 'rxjs';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
+import { PointFindDto } from '../dto/rank-find.dto';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -120,7 +121,7 @@ export class AlgorithmService {
 
     public async getIndividualAlgorithmRank(
         userId: string,
-        options: RankListOptionDto,
+        options: PointFindDto,
     ) {
         return await this.algorithmRepository.findIndividualAlgorithmRank(
             userId,
