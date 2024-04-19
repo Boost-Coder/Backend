@@ -1,8 +1,5 @@
 import { BaseRepository } from './base.repository';
 import { DataSource, Repository } from 'typeorm';
-import { Algorithm } from '../Entity/algorithm';
-import { Inject } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import {
     RankListDto,
     RankListOptionDto,
@@ -41,6 +38,24 @@ export class StatRepository extends BaseRepository {
         return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
     }
 
+    public async findIndividualRank(userId: string, options: PointFindDto) {
+        const queryBuilder = this.repository
+            .createQueryBuilder()
+            .select(['b.rank', 'b.user_id'])
+            .distinct(true)
+            .from((sub) => {
+                return sub
+                    .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
+                    .addSelect('a.user_id', 'user_id')
+                    .from(this.entity, 'a')
+                    .innerJoin(User, 'u', 'a.user_id = u.user_id')
+                    .addSelect('u.major', 'major')
+                    .where(this.createClassificationOption(options));
+            }, 'b')
+            .where(`b.user_id = '${userId}'`);
+
+        return await queryBuilder.getRawOne();
+    }
     createCursorOption(options: RankListOptionDto) {
         if (!options.cursorPoint && !options.cursorUserId) {
             return 'b.point > -1';
