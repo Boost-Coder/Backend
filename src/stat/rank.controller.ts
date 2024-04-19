@@ -15,6 +15,7 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
+import { RankFindDto } from './dto/rank-find.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/rank')
@@ -52,6 +53,26 @@ export class RankController {
     }
 
     @Get('/users/:id')
+    @ApiTags('rank')
+    @ApiOperation({
+        summary: '유저의 각 부문 별 랭킹 API',
+        description:
+            '만약 유저가 해당 전공이 아니면 전부 null 로 반환한다 , 등록하지 않은 부문이 있는 경우도 null 로 반환',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저의 부문별 랭킹 반환',
+        type: RankFindDto,
+    })
+    @ApiUnauthorizedResponse({
+        description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
+    })
+    @ApiForbiddenResponse({
+        description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
+    })
+    @ApiInternalServerErrorResponse({
+        description: '서버 오류',
+    })
     async findUsersRank(
         @Param('id') userId,
         @Query() options: RankListOptionDto,
@@ -59,7 +80,7 @@ export class RankController {
         const user = await this.userService.findUserByUserId(userId);
 
         if (user.major !== options.major) {
-            return { total: null, algorithm: null, github: null, grade: null };
+            return new RankFindDto(null, null, null, null);
         } else {
             const algorithmRank =
                 await this.algorithmService.getIndividualAlgorithmRank(
@@ -81,12 +102,12 @@ export class RankController {
                 userId,
                 options,
             );
-            return {
-                total: totalRank ? totalRank.rank : null,
-                algorithm: algorithmRank ? algorithmRank.rank : null,
-                github: githubRank ? githubRank.rank : null,
-                grade: gradeRank ? gradeRank.rank : null,
-            };
+            return new RankFindDto(
+                totalRank ? totalRank.rank : null,
+                algorithmRank ? algorithmRank.rank : null,
+                githubRank ? githubRank.rank : null,
+                gradeRank ? gradeRank.rank : null,
+            );
         }
     }
 }
