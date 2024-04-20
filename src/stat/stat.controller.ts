@@ -31,6 +31,7 @@ import {
     ApiTags,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Transactional } from 'typeorm-transactional';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -98,6 +99,7 @@ export class StatController {
         description: '서버 오류',
     })
     @Post('algorithm')
+    @Transactional()
     async algorithmCreate(@Body() body: CreateAlgorithmDto, @UserId() userId) {
         await this.algorithmService.createAlgorithm(userId, body.bojId);
         await this.totalService.updateTotal(userId);
@@ -128,8 +130,9 @@ export class StatController {
     })
     @UseGuards(OwnershipGuard)
     @Patch('algorithm/:id')
+    @Transactional()
     async algorithmModify(
-        @Param('id') userId,
+        @Param('id') userId: string,
         @Body() body: CreateAlgorithmDto,
     ) {
         await this.algorithmService.modifyAlgorithm(userId, body.bojId);
@@ -160,7 +163,8 @@ export class StatController {
     })
     @UseGuards(OwnershipGuard)
     @Delete('algorithm/:id')
-    async algorithmRemove(@Param('id') userId) {
+    @Transactional()
+    async algorithmRemove(@Param('id') userId: string) {
         await this.algorithmService.removeAlgorithm(userId);
         await this.totalService.updateTotal(userId);
     }
@@ -191,6 +195,7 @@ export class StatController {
         description: '서버 오류',
     })
     @Post('github')
+    @Transactional()
     public async gitHubCreate(@Body() body: CreateGithubDto, @UserId() userId) {
         await this.githubService.createGithub(body, userId);
         await this.totalService.updateTotal(userId);
@@ -221,6 +226,7 @@ export class StatController {
     })
     @UseGuards(OwnershipGuard)
     @Patch('github/:id')
+    @Transactional()
     public async gitHubModify(
         @Param('id') userId: string,
         @Body() body: CreateGithubDto,
@@ -253,6 +259,7 @@ export class StatController {
     })
     @UseGuards(OwnershipGuard)
     @Delete('github/:id')
+    @Transactional()
     public async gitHubDelete(@Param('id') userId: string) {
         await this.githubService.deleteGithub(userId);
         await this.totalService.updateTotal(userId);
@@ -294,6 +301,7 @@ export class StatController {
         },
     })
     @Post('grade')
+    @Transactional()
     public async createGrade(
         @Body('grade') grade: number,
         @UserId() userId: string,
@@ -336,6 +344,7 @@ export class StatController {
     })
     @Patch('grade/:id')
     @UseGuards(OwnershipGuard)
+    @Transactional()
     public async modifyGrade(
         @Body('grade') grade: number,
         @Param('id') userId: string,
@@ -368,6 +377,7 @@ export class StatController {
     })
     @Delete('grade/:id')
     @UseGuards(OwnershipGuard)
+    @Transactional()
     public async deleteGrade(@Param('id') userId: string) {
         await this.gradeService.gradeDelete(userId);
         await this.totalService.updateTotal(userId);
