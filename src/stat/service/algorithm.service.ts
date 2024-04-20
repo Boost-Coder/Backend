@@ -64,7 +64,7 @@ export class AlgorithmService {
             algorithm.rating = bojInfo.rating;
             algorithm.solvedCount = bojInfo.solvedCount;
             algorithm.point = this.calculatePoint(bojInfo);
-            await this.algorithmRepository.update(userId, algorithm);
+            await this.algorithmRepository.updateAlgorithm(userId, algorithm);
         } catch (e) {
             if (e instanceof BadRequestException) {
                 await this.removeAlgorithm(userId);
@@ -86,7 +86,7 @@ export class AlgorithmService {
         algorithm.rating = bojInfo.rating;
         algorithm.solvedCount = bojInfo.solvedCount;
         algorithm.point = this.calculatePoint(bojInfo);
-        await this.algorithmRepository.update(userId, algorithm);
+        await this.algorithmRepository.updateAlgorithm(userId, algorithm);
     }
 
     async removeAlgorithm(userId: string) {
@@ -94,7 +94,7 @@ export class AlgorithmService {
         if (!isExist) {
             throw new NotFoundException('algorithm not found');
         }
-        await this.algorithmRepository.delete(userId);
+        await this.algorithmRepository.deleteAlgorithm(userId);
     }
 
     async getBOJInfo(bojId: string) {

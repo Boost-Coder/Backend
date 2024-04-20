@@ -8,8 +8,8 @@ import { RankListOptionDto } from '../dto/rank-list-option.dto';
 const mockAlgorithmRepository = {
     save: jest.fn(),
     findOneById: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+    updateAlgorithm: jest.fn(),
+    deleteAlgorithm: jest.fn(),
     findAlgorithmWithRank: jest.fn(),
 };
 
@@ -145,7 +145,8 @@ describe('AlgorithmService', () => {
             };
             (axios.get as jest.Mock).mockResolvedValue(mockResponse);
             await service.modifyAlgorithm(userId, bojId);
-            const callProperty = algorithmRepository.update.mock.calls[0][1];
+            const callProperty =
+                algorithmRepository.updateAlgorithm.mock.calls[0][1];
             expect(callProperty.bojId).toEqual(bojId);
             expect(callProperty.rating).toEqual(mockResponse.data.rating);
             expect(callProperty.tier).toEqual(mockResponse.data.tier);
@@ -186,7 +187,8 @@ describe('AlgorithmService', () => {
             };
             (axios.get as jest.Mock).mockResolvedValue(mockResponse);
             await service.updateAlgorithm(userId);
-            const callProperty = algorithmRepository.update.mock.calls[0][1];
+            const callProperty =
+                algorithmRepository.updateAlgorithm.mock.calls[0][1];
             expect(callProperty.rating).toEqual(mockResponse.data.rating);
             expect(callProperty.tier).toEqual(mockResponse.data.tier);
             expect(callProperty.solvedCount).toEqual(
@@ -202,7 +204,7 @@ describe('AlgorithmService', () => {
             });
             await service.updateAlgorithm(userId);
 
-            expect(algorithmRepository.delete).toHaveBeenCalled();
+            expect(algorithmRepository.deleteAlgorithm).toHaveBeenCalled();
         });
     });
 
@@ -213,7 +215,7 @@ describe('AlgorithmService', () => {
 
             await service.removeAlgorithm(userId);
 
-            expect(algorithmRepository.delete).toHaveBeenCalled();
+            expect(algorithmRepository.deleteAlgorithm).toHaveBeenCalled();
         });
 
         it('존재하지 않는 것을 지우려고 할 때 오류 발생', async function () {
