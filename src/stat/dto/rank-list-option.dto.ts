@@ -21,7 +21,7 @@ export class RankListDto {
     rank: number;
 
     @ApiProperty()
-    user_id: string;
+    userId: string;
 
     @ApiProperty()
     point: number;

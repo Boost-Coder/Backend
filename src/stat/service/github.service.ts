@@ -3,7 +3,6 @@ import {
     Injectable,
     InternalServerErrorException,
     Logger,
-    NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { GithubRepository } from '../repository/github.repository';
@@ -135,10 +134,7 @@ export class GithubService {
         userId: string,
         options: PointFindDto,
     ) {
-        return await this.githubRepository.findIndividualGithubRank(
-            userId,
-            options,
-        );
+        return await this.githubRepository.findIndividualRank(userId, options);
     }
 
     // public async redirect(code: string) {
@@ -160,4 +156,13 @@ export class GithubService {
     //     github.githubId = userResource.id;
     //     await this.githubRepository.save(github);
     // }
+    async getGithubRank(options: RankListOptionDto) {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.githubRepository.findWithRank(options);
+    }
 }

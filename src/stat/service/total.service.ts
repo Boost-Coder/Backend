@@ -7,8 +7,9 @@ import { GradeService } from './grade.service';
 import { Github } from '../../Entity/github';
 import { Grade } from '../../Entity/grade';
 import { Algorithm } from '../../Entity/algorithm';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
+import { StatFindDto } from '../dto/stat-find.dto';
 
 @Injectable()
 export class TotalService {
@@ -19,17 +20,30 @@ export class TotalService {
         private gradeService: GradeService,
     ) {}
 
-    async findStat(userId: string) {
+    async findStat(userId: string): Promise<StatFindDto> {
         const github = await this.githubService.findGithub(userId);
         const algorithm = await this.algorithmService.findAlgorithm(userId);
         const grade = await this.gradeService.findGrade(userId);
+        const total = await this.totalRepository.findOneById(userId);
 
         return {
             githubPoint: github ? github.point : null,
             algorithmPoint: algorithm ? algorithm.point : null,
             grade: grade ? grade.grade : null,
+            totalPoint: grade ? total.point : null,
         };
     }
+
+    async getTotalRank(options: RankListOptionDto): Promise<[RankListDto]> {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.totalRepository.findWithRank(options);
+    }
+
     async createTotalPoint(userId: string) {
         const isExist = await this.totalRepository.findOneById(userId);
 
@@ -57,9 +71,6 @@ export class TotalService {
     }
 
     public async getIndividualTotalRank(userId: string, options: PointFindDto) {
-        return await this.totalRepository.findIndividualAlgorithmRank(
-            userId,
-            options,
-        );
+        return await this.totalRepository.findIndividualRank(userId, options);
     }
 }

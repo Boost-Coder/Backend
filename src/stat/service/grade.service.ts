@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { GradeRepository } from '../repository/grade.repository';
 import { Grade } from '../../Entity/grade';
-import { RankListOptionDto } from '../dto/rank-list-option.dto';
+import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
 
 @Injectable()
@@ -60,9 +60,16 @@ export class GradeService {
     }
 
     public async getIndividualGradeRank(userId: string, options: PointFindDto) {
-        return await this.gradeRepository.findIndividualGradeRank(
-            userId,
-            options,
-        );
+        return await this.gradeRepository.findIndividualRank(userId, options);
+    }
+
+    async getGradeRank(options: RankListOptionDto): Promise<[RankListDto]> {
+        if (
+            (options.cursorPoint && !options.cursorUserId) ||
+            (!options.cursorPoint && options.cursorUserId)
+        ) {
+            throw new BadRequestException('Cursor Element Must Be Two');
+        }
+        return await this.gradeRepository.findWithRank(options);
     }
 }
