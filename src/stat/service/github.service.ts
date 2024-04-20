@@ -20,13 +20,13 @@ export class GithubService {
     ) {}
 
     async findGithub(userId: string) {
-        return await this.githubRepository.findOne(userId);
+        return await this.githubRepository.findOneById(userId);
     }
 
     public async createGithub(tokens: CreateGithubDto, userId: string) {
         const userResource = await this.getUserResource(tokens.accessToken);
 
-        const isExist = await this.githubRepository.findOne(userId);
+        const isExist = await this.githubRepository.findOneById(userId);
 
         if (isExist) {
             throw new BadRequestException('이미 등록된 id 입니다');
@@ -46,7 +46,7 @@ export class GithubService {
         const userResource = await this.getUserResource(tokens.accessToken);
         const githubPoint = this.calculateGithubPoint(userResource);
 
-        const isExist = await this.githubRepository.findOne(userId);
+        const isExist = await this.githubRepository.findOneById(userId);
 
         if (!isExist) {
             throw new BadRequestException(
@@ -59,7 +59,7 @@ export class GithubService {
         github.point = githubPoint;
         github.accessToken = tokens.accessToken;
         github.githubId = userResource.id;
-        await this.githubRepository.update(github);
+        await this.githubRepository.updateGithub(github);
     }
 
     public async updateGithubList() {
@@ -71,12 +71,12 @@ export class GithubService {
             );
 
             userGithubList[i].point = this.calculateGithubPoint(userResource);
-            await this.githubRepository.update(userGithubList[i]);
+            await this.githubRepository.updateGithub(userGithubList[i]);
         }
     }
 
     public async deleteGithub(userId: string) {
-        const isExist = await this.githubRepository.findOne(userId);
+        const isExist = await this.githubRepository.findOneById(userId);
 
         if (!isExist) {
             throw new BadRequestException(
@@ -84,7 +84,7 @@ export class GithubService {
             );
         }
 
-        await this.githubRepository.delete(userId);
+        await this.githubRepository.deleteGithub(userId);
     }
     public calculateGithubPoint(userResource: object) {
         return 0;
