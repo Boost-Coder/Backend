@@ -11,11 +11,20 @@ import * as process from 'process';
 import { HttpLoggerInterceptor } from './utils/httpLoggerInterceptor';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/httpExceptionFilter';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 
 @Module({
     imports: [
         TypeOrmModule.forRootAsync({
             useClass: TypeOrmConfigService,
+            async dataSourceFactory(options) {
+                if (!options) {
+                    throw new Error('Invalid options passed');
+                }
+
+                return addTransactionalDataSource(new DataSource(options));
+            },
         }),
         ConfigModule.forRoot({
             isGlobal: true,
