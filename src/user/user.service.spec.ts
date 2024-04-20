@@ -14,6 +14,10 @@ const mockUserRepository = {
     remove: jest.fn(),
 };
 
+jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({}),
+}));
+
 describe('UserService', () => {
     let service: UserService;
 
