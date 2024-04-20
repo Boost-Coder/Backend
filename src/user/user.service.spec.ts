@@ -9,9 +9,9 @@ const mockUserRepository = {
     findOneByProviderId: jest.fn(),
     save: jest.fn(),
     findOneByUserId: jest.fn(),
-    update: jest.fn(),
+    updateUser: jest.fn(),
     findOneWithStats: jest.fn(),
-    delete: jest.fn(),
+    remove: jest.fn(),
 };
 
 describe('UserService', () => {
@@ -149,8 +149,8 @@ describe('UserService', () => {
             mockUserRepository.findOneByUserId.mockResolvedValue(user);
 
             await service.updateUserInfo(userId, userInfoToUpdate);
-            const callProperty = mockUserRepository.update.mock.calls[0][1];
-            expect(mockUserRepository.update).toHaveBeenCalled();
+            const callProperty = mockUserRepository.updateUser.mock.calls[0][1];
+            expect(mockUserRepository.updateUser).toHaveBeenCalled();
             expect(callProperty.nickname).toEqual('nickname');
             expect(callProperty.major).toEqual('major');
             expect(callProperty.name).toEqual('name');
@@ -165,7 +165,7 @@ describe('UserService', () => {
 
             await service.removeUser(userId);
 
-            expect(mockUserRepository.delete).toHaveBeenCalledWith(user);
+            expect(mockUserRepository.remove).toHaveBeenCalledWith(user);
         });
 
         it('should throw Not Found Error', function () {

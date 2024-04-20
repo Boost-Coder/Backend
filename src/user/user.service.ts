@@ -66,7 +66,7 @@ export class UserService {
 
         this.changeUserInfo(user, userInfoToUpdate);
 
-        await this.userRepository.update(userId, user);
+        await this.userRepository.updateUser(userId, user);
     }
 
     changeUserInfo(user: User, userInfoToUpdate: UpdateUserInfoDto) {
@@ -82,7 +82,7 @@ export class UserService {
         if (!user) {
             throw new NotFoundException('User Not Found');
         }
-        await this.userRepository.delete(user);
+        await this.userRepository.remove(user);
     }
 
     generateUserId() {
