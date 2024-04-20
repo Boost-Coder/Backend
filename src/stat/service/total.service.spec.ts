@@ -12,7 +12,7 @@ import { Grade } from '../../Entity/grade';
 const mockTotalRepository = {
     save: jest.fn(),
     findOneById: jest.fn(),
-    update: jest.fn(),
+    updateTotal: jest.fn(),
 };
 
 const mockGitService = {
