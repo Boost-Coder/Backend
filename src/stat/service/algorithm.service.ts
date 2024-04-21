@@ -68,7 +68,7 @@ export class AlgorithmService {
         } catch (e) {
             if (e instanceof BadRequestException) {
                 await this.removeAlgorithm(userId);
-                this.logger.log(`${userId} 님의 알고리즘 스탯이 초기화됨.`);
+                this.logger.warn(`${userId} 님의 알고리즘 스탯이 초기화됨.`);
             } else {
                 throw e;
             }
