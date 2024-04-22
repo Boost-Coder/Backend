@@ -1,25 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { REQUEST } from '@nestjs/core';
 import { Grade } from '../../Entity/grade';
 import { StatRepository } from '../../utils/stat.repository';
 
 @Injectable()
 export class GradeRepository extends StatRepository {
-    constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
-        super(dataSource, req, Grade);
+    constructor(dataSource: DataSource) {
+        super(dataSource, Grade);
     }
 
-    public async save(grade: Grade) {
-        await this.repository.save(grade);
+    public async findOneById(id: string) {
+        return await this.findOneBy({ userId: id });
     }
 
-    public async findOne(id: string) {
-        return await this.repository.findOneBy({ userId: id });
-    }
-
-    public async update(newGrade: Grade) {
-        return await this.repository.update(
+    public async updateGrade(newGrade: Grade) {
+        return await this.update(
             { userId: newGrade.userId },
             {
                 grade: newGrade.grade,
@@ -28,7 +23,7 @@ export class GradeRepository extends StatRepository {
         );
     }
 
-    public async delete(id: string) {
-        await this.repository.delete({ userId: id });
+    public async deleteGrade(id: string) {
+        await this.delete({ userId: id });
     }
 }

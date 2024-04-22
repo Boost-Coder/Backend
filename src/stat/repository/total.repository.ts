@@ -1,23 +1,19 @@
 import { DataSource } from 'typeorm';
-import { Inject } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { TotalPoint } from '../../Entity/totalPoint';
 import { StatRepository } from '../../utils/stat.repository';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class TotalRepository extends StatRepository {
-    constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
-        super(dataSource, req, TotalPoint);
+    constructor(private dataSource: DataSource) {
+        super(dataSource, TotalPoint);
     }
 
     async findOneById(userId: string) {
-        return await this.repository.findOneBy({ userId: userId });
+        return await this.findOneBy({ userId: userId });
     }
 
-    async update(total: TotalPoint, userId: string) {
-        return await this.repository.update({ userId: userId }, total);
-    }
-
-    async save(total: TotalPoint) {
-        return await this.repository.save(total);
+    async updateTotal(total: TotalPoint, userId: string) {
+        return await this.update({ userId: userId }, total);
     }
 }

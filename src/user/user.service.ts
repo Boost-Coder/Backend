@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { QueryFailedError } from 'typeorm';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { GetUsersResponseDto } from './dto/get-users-response.dto';
+import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class UserService {
@@ -66,7 +67,7 @@ export class UserService {
 
         this.changeUserInfo(user, userInfoToUpdate);
 
-        await this.userRepository.update(userId, user);
+        await this.userRepository.updateUser(userId, user);
     }
 
     changeUserInfo(user: User, userInfoToUpdate: UpdateUserInfoDto) {
@@ -77,12 +78,13 @@ export class UserService {
         user.birthDate = userInfoToUpdate.birthDate;
     }
 
+    @Transactional()
     async removeUser(userId: string) {
         const user = await this.userRepository.findOneWithStats(userId);
         if (!user) {
             throw new NotFoundException('User Not Found');
         }
-        await this.userRepository.delete(user);
+        await this.userRepository.remove(user);
     }
 
     generateUserId() {

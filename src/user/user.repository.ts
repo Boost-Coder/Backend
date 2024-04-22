@@ -1,45 +1,33 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
-import { BaseRepository } from '../utils/base.repository';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { REQUEST } from '@nestjs/core';
 import { User } from '../Entity/user';
 
-@Injectable({ scope: Scope.REQUEST })
-export class UserRepository extends BaseRepository {
-    private repository: Repository<User>;
-    constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
-        super(dataSource, req);
-        this.repository = this.getRepository(User);
+@Injectable()
+export class UserRepository extends Repository<User> {
+    constructor(private dataSource: DataSource) {
+        super(User, dataSource.createEntityManager());
     }
 
     async findOneByProviderId(providerId: string) {
-        return await this.repository.findOneBy({ providerId: providerId });
+        return await this.findOneBy({ providerId: providerId });
     }
 
     async findOneByUserId(userId: string) {
-        return await this.repository.findOneBy({ userId: userId });
+        return await this.findOneBy({ userId: userId });
     }
 
     async findOneByNickname(nickname: string) {
-        return await this.repository.findOneBy({ nickname: nickname });
+        return await this.findOneBy({ nickname: nickname });
     }
 
     async findOneWithStats(userId: string) {
-        return await this.repository.findOne({
+        return await this.findOne({
             where: { userId: userId },
             relations: ['github', 'algorithm', 'grade', 'totalScore'],
         });
     }
 
-    async save(user: User) {
-        return await this.repository.save(user);
-    }
-
-    async update(userId: string, user: User) {
-        return await this.repository.update({ userId: userId }, user);
-    }
-
-    async delete(user: User) {
-        await this.repository.remove(user);
+    async updateUser(userId: string, user: User) {
+        return await this.update({ userId: userId }, user);
     }
 }

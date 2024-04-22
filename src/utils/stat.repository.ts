@@ -1,4 +1,3 @@
-import { BaseRepository } from './base.repository';
 import { DataSource, Repository } from 'typeorm';
 import {
     RankListDto,
@@ -7,18 +6,15 @@ import {
 import { User } from '../Entity/user';
 import { PointFindDto } from '../stat/dto/rank-find.dto';
 
-export class StatRepository extends BaseRepository {
-    protected repository: Repository<any>;
+export class StatRepository extends Repository<any> {
     private entity;
-    constructor(dataSource: DataSource, req: Request, entity) {
-        super(dataSource, req);
-        this.repository = this.getRepository(entity);
+    constructor(dataSource: DataSource, entity) {
+        super(entity, dataSource.createEntityManager());
         this.entity = entity;
     }
 
     async findWithRank(options: RankListOptionDto): Promise<[RankListDto]> {
-        const queryBuilder = this.repository
-            .createQueryBuilder()
+        const queryBuilder = this.createQueryBuilder()
             .select(['b.rank', 'b.point', 'b.nickname'])
             .addSelect('b.user_id', 'userId')
             .distinct(true)
@@ -40,8 +36,7 @@ export class StatRepository extends BaseRepository {
     }
 
     public async findIndividualRank(userId: string, options: PointFindDto) {
-        const queryBuilder = this.repository
-            .createQueryBuilder()
+        const queryBuilder = this.createQueryBuilder()
             .select(['b.rank', 'b.user_id'])
             .distinct(true)
             .from((sub) => {

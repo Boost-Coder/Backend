@@ -1,25 +1,20 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Github } from '../../Entity/github';
 import { DataSource } from 'typeorm';
-import { REQUEST } from '@nestjs/core';
 import { StatRepository } from '../../utils/stat.repository';
 
 @Injectable()
 export class GithubRepository extends StatRepository {
-    constructor(dataSource: DataSource, @Inject(REQUEST) req: Request) {
-        super(dataSource, req, Github);
+    constructor(dataSource: DataSource) {
+        super(dataSource, Github);
     }
 
-    public async save(github: Github) {
-        await this.repository.save(github);
+    public async findOneById(id: string) {
+        return await this.findOneBy({ userId: id });
     }
 
-    public async findOne(id: string) {
-        return await this.repository.findOneBy({ userId: id });
-    }
-
-    public async update(github: Github) {
-        return await this.repository.update(
+    public async updateGithub(github: Github) {
+        return await this.update(
             { userId: github.userId },
             {
                 githubId: github.githubId,
@@ -29,11 +24,11 @@ export class GithubRepository extends StatRepository {
         );
     }
 
-    public async delete(id: string) {
-        await this.repository.delete({ userId: id });
+    public async deleteGithub(id: string) {
+        await this.delete({ userId: id });
     }
 
     public async findAll() {
-        return await this.repository.find();
+        return await this.find();
     }
 }

@@ -63,7 +63,7 @@ export class TotalService {
         const grade = await this.gradeService.findGrade(userId);
         const total = new TotalPoint();
         total.point = this.calculateTotalPoint(github, algorithm, grade);
-        await this.totalRepository.update(total, userId);
+        await this.totalRepository.updateTotal(total, userId);
     }
 
     calculateTotalPoint(github: Github, algorithm: Algorithm, grade: Grade) {
