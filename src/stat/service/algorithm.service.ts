@@ -56,7 +56,7 @@ export class AlgorithmService {
     async updateAlgorithm(userId: string) {
         const algorithm = await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
-            throw new NotFoundError('Algorithm info not found');
+            return;
         }
         try {
             const bojInfo = await this.getBOJInfo(algorithm.bojId);
@@ -70,7 +70,9 @@ export class AlgorithmService {
                 await this.removeAlgorithm(userId);
                 this.logger.warn(`${userId} 님의 알고리즘 스탯이 초기화됨.`);
             } else {
-                throw e;
+                this.logger.error(
+                    `${userId} 님의 알고리즘 스탯이 업데이트 되지 않음. ${e}`,
+                );
             }
         }
     }
