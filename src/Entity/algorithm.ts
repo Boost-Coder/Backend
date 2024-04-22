@@ -1,9 +1,11 @@
 import {
     Column,
+    CreateDateColumn,
     Entity,
     JoinColumn,
     OneToOne,
     PrimaryGeneratedColumn,
+    UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user';
 
@@ -35,6 +37,18 @@ export class Algorithm {
 
     @Column()
     point: number;
+
+    @CreateDateColumn({
+        type: 'timestamp',
+        nullable: false,
+    })
+    createDate: Date;
+
+    @UpdateDateColumn({
+        type: 'timestamp',
+        nullable: true,
+    })
+    updateDate: Date;
 
     @OneToOne(() => User, (user) => user.userId, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })

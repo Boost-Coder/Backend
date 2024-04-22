@@ -15,6 +15,10 @@ import { Transactional } from 'typeorm-transactional';
 export class UserService {
     constructor(private userRepository: UserRepository) {}
 
+    async getUsers() {
+        return await this.userRepository.find();
+    }
+
     async findUserByProviderId(providerId: string) {
         const user = await this.userRepository.findOneByProviderId(providerId);
         return user;

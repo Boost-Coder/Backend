@@ -13,6 +13,8 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/httpExceptionFilter';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { BatchModule } from './batch/batch.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
     imports: [
@@ -30,9 +32,11 @@ import { DataSource } from 'typeorm';
             isGlobal: true,
             envFilePath: `${process.cwd()}/envs/${process.env.NODE_ENV}.env`,
         }),
+        ScheduleModule.forRoot(),
         AuthModule,
         UserModule,
         StatModule,
+        BatchModule,
     ],
     controllers: [AppController],
     providers: [

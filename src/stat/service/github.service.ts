@@ -62,16 +62,19 @@ export class GithubService {
         await this.githubRepository.updateGithub(github);
     }
 
-    public async updateGithubList() {
-        const userGithubList = await this.githubRepository.findAll();
-
-        for (let i = 0; i < userGithubList.length; i++) {
-            const userResource = await this.getUserResource(
-                userGithubList[i].accessToken,
+    public async updateGithub(userId: string) {
+        const github = await this.githubRepository.findOneById(userId);
+        if (github === null) {
+            return;
+        }
+        try {
+            const githubInfo = await this.getUserResource(github.accessToken);
+            github.point = this.calculateGithubPoint(githubInfo);
+            await this.githubRepository.updateGithub(github);
+        } catch (e) {
+            this.logger.error(
+                `${userId} 님의 알고리즘 스탯이 업데이트 되지 않음. ${e}`,
             );
-
-            userGithubList[i].point = this.calculateGithubPoint(userResource);
-            await this.githubRepository.updateGithub(userGithubList[i]);
         }
     }
 
