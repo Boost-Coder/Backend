@@ -4,6 +4,7 @@ import { UserService } from '../user/user.service';
 import { AlgorithmService } from '../stat/service/algorithm.service';
 import { GithubService } from '../stat/service/github.service';
 import { TotalService } from '../stat/service/total.service';
+import { IsolationLevel, Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class BatchService {
@@ -14,13 +15,18 @@ export class BatchService {
         private githubService: GithubService,
         private totalService: TotalService,
     ) {}
-    @Cron('40 * * * * *')
+    @Cron('0 0 * * * *')
+    @Transactional({
+        isolationLevel: IsolationLevel.READ_COMMITTED,
+    })
     async updateAllUserStat() {
+        this.logger.log(`모든 유저의 역량 업데이트 시작`);
         const users = await this.userService.getUsers();
         for (const user of users) {
             await this.algorithmService.updateAlgorithm(user.userId);
+            await this.githubService.updateGithub(user.userId);
             await this.totalService.updateTotal(user.userId);
-            this.logger.log(`${user.userId}의 역량 업데이트`);
         }
+        this.logger.log(`모든 유저의 역량 업데이트 완료`);
     }
 }
