@@ -73,7 +73,7 @@ export class GithubService {
             await this.githubRepository.updateGithub(github);
         } catch (e) {
             this.logger.error(
-                `${userId} 님의 알고리즘 스탯이 업데이트 되지 않음. ${e}`,
+                `${userId} 님의 깃허브 스탯이 업데이트 되지 않음. ${e}`,
             );
         }
     }
