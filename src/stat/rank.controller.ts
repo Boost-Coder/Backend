@@ -16,7 +16,6 @@ import {
 } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import { PointFindDto, RankFindDto } from './dto/rank-find.dto';
-import { ErrorDto } from './dto/error.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/rank')
@@ -42,15 +41,12 @@ export class RankController {
     })
     @ApiUnauthorizedResponse({
         description: 'jwt 관련 문제 (인증 시간이 만료됨, jwt를 보내지 않음)',
-        type: ErrorDto,
     })
     @ApiForbiddenResponse({
         description: '허용되지 않은 자원에 접근한 경우. 즉, 권한이 없는 경우',
-        type: ErrorDto,
     })
     @ApiInternalServerErrorResponse({
         description: '서버 오류',
-        type: ErrorDto,
     })
     async findAlgorithmRank(@Query() options: RankListOptionDto) {
         return await this.algorithmService.getAlgorithms(options);
