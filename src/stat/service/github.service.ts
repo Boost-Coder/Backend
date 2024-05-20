@@ -32,7 +32,7 @@ export class GithubService {
             throw new BadRequestException('이미 등록된 id 입니다');
         }
 
-        const githubPoint = this.calculateGithubPoint(userResource);
+        const githubPoint = await this.calculateGithubPoint(userResource);
 
         const github = new Github();
         github.userId = userId;
@@ -44,7 +44,7 @@ export class GithubService {
 
     public async modifyGithub(tokens: CreateGithubDto, userId: string) {
         const userResource = await this.getUserResource(tokens.accessToken);
-        const githubPoint = this.calculateGithubPoint(userResource);
+        const githubPoint = await this.calculateGithubPoint(userResource);
 
         const isExist = await this.githubRepository.findOneById(userId);
 
@@ -69,11 +69,11 @@ export class GithubService {
         }
         try {
             const githubInfo = await this.getUserResource(github.accessToken);
-            github.point = this.calculateGithubPoint(githubInfo);
+            github.point = await this.calculateGithubPoint(githubInfo);
             await this.githubRepository.updateGithub(github);
         } catch (e) {
             this.logger.error(
-                `${userId} 님의 알고리즘 스탯이 업데이트 되지 않음. ${e}`,
+                `${userId} 님의 깃허브 스탯이 업데이트 되지 않음. ${e}`,
             );
         }
     }
@@ -89,8 +89,59 @@ export class GithubService {
 
         await this.githubRepository.deleteGithub(userId);
     }
-    public calculateGithubPoint(userResource: object) {
-        return 0;
+    public async calculateGithubPoint(userResource: object) {
+        const commitInfo = await this.getCommits(userResource['login']);
+        const PRInfo = await this.getPRs(userResource['login']);
+        const issueInfo = await this.getIssues(userResource['login']);
+        const followers = userResource['followers'];
+        const [COMMIT_WEIGHT, PR_WEIGHT, ISSUE_WEIGHT, FOLLOWER_WEIGHT] = [
+            2, 3, 2, 1,
+        ];
+        return (
+            commitInfo * COMMIT_WEIGHT +
+            issueInfo * ISSUE_WEIGHT +
+            PRInfo * PR_WEIGHT +
+            followers * FOLLOWER_WEIGHT
+        );
+    }
+
+    public async getIssues(userName: string) {
+        const requestURL = `https://api.github.com/search/issues?q=author:${userName}+is:issue`;
+
+        const commitInfo = await fetch(requestURL, {
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+
+        const commitInfoJson = await commitInfo.json();
+        return commitInfoJson.total_count;
+    }
+
+    public async getPRs(userName: string) {
+        const requestURL = `https://api.github.com/search/issues?q=author:${userName}+is:pr`;
+
+        const commitInfo = await fetch(requestURL, {
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+
+        const commitInfoJson = await commitInfo.json();
+        return commitInfoJson.total_count;
+    }
+
+    public async getCommits(userName: string) {
+        const requestURL = `https://api.github.com/search/commits?q=author:${userName}`;
+
+        const commitInfo = await fetch(requestURL, {
+            headers: {
+                Accept: 'application/json',
+            },
+        });
+
+        const commitInfoJson = await commitInfo.json();
+        return commitInfoJson.total_count;
     }
 
     public async fetchAccessToken(authorization_code: string) {
