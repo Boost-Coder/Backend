@@ -15,7 +15,7 @@ export class BatchService {
         private githubService: GithubService,
         private totalService: TotalService,
     ) {}
-    @Cron('0 0 * * * *')
+    @Cron('0 0 0 * * *')
     @Transactional({
         isolationLevel: IsolationLevel.READ_COMMITTED,
     })
