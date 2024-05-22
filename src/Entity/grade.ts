@@ -23,7 +23,7 @@ export class Grade {
     @Column('double')
     grade: number;
 
-    @Column()
+    @Column('double')
     point: number;
 
     @CreateDateColumn({
