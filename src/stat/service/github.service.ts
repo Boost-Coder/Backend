@@ -98,12 +98,6 @@ export class GithubService {
         const [COMMIT_WEIGHT, PR_WEIGHT, ISSUE_WEIGHT, FOLLOWER_WEIGHT] = [
             2, 3, 2, 1,
         ];
-        return (
-            commitInfo * COMMIT_WEIGHT +
-            issueInfo * ISSUE_WEIGHT +
-            PRInfo * PR_WEIGHT +
-            followers * FOLLOWER_WEIGHT
-        );
         const TOTAL_WEIGHT =
             COMMIT_WEIGHT + PR_WEIGHT + ISSUE_WEIGHT + FOLLOWER_WEIGHT;
 
