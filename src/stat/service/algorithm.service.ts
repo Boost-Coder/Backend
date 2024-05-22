@@ -8,9 +8,9 @@ import {
 import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
-import { NotFoundError } from 'rxjs';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
+import { PERCENTILES, RATINGS } from '../../utils/algorithmData';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -118,7 +118,27 @@ export class AlgorithmService {
     }
 
     private calculatePoint(bojInfo: BOJInfo) {
-        return 0;
+        const rating = bojInfo.rating;
+        if (rating <= RATINGS[0]) {
+            return 100 - PERCENTILES[0];
+        } else if (rating >= RATINGS[RATINGS.length - 1]) {
+            return 100 - PERCENTILES[PERCENTILES.length - 1];
+        } else {
+            for (let i = 1; i < RATINGS.length; i++) {
+                if (rating < RATINGS[i]) {
+                    // 선형 보간법
+                    const x0 = RATINGS[i - 1],
+                        x1 = RATINGS[i];
+                    const y0 = PERCENTILES[i - 1],
+                        y1 = PERCENTILES[i];
+                    const percentile =
+                        y0 + ((rating - x0) * (y1 - y0)) / (x1 - x0);
+                    return 100 - percentile;
+                }
+            }
+            return 0;
+        }
+        // return bojInfo.rating;
     }
 
     public async getIndividualAlgorithmRank(
