@@ -27,10 +27,10 @@ export class TotalService {
         const total = await this.totalRepository.findOneById(userId);
 
         return {
-            githubPoint: github ? github.point : null,
-            algorithmPoint: algorithm ? algorithm.point : null,
+            githubPoint: github ? github.score : null,
+            algorithmPoint: algorithm ? algorithm.score : null,
             grade: grade ? grade.grade : null,
-            totalPoint: grade ? total.point : null,
+            totalPoint: grade ? total.score : null,
         };
     }
 
@@ -52,7 +52,7 @@ export class TotalService {
         }
         const totalPoint = new TotalPoint();
         totalPoint.userId = userId;
-        totalPoint.point = 0;
+        totalPoint.score = 0;
 
         await this.totalRepository.save(totalPoint);
     }
@@ -62,16 +62,16 @@ export class TotalService {
         const algorithm = await this.algorithmService.findAlgorithm(userId);
         const grade = await this.gradeService.findGrade(userId);
         const total = new TotalPoint();
-        total.point = this.calculateTotalPoint(github, algorithm, grade);
+        total.score = this.calculateTotalPoint(github, algorithm, grade);
         await this.totalRepository.updateTotal(total, userId);
     }
 
     calculateTotalPoint(github: Github, algorithm: Algorithm, grade: Grade) {
         const [GRADE_WEIGHT, ALGORITHM_WEIGHT, GITHUB_WEIGHT] = [1, 4, 4];
         const TOTAL_WEIGHT = GRADE_WEIGHT + ALGORITHM_WEIGHT + GITHUB_WEIGHT;
-        const githubPoint = github == null ? 0 : github.point;
-        const algorithmPoint = algorithm == null ? 0 : algorithm.point;
-        const gradePoint = grade == null ? 0 : grade.point;
+        const githubPoint = github == null ? 0 : github.score;
+        const algorithmPoint = algorithm == null ? 0 : algorithm.score;
+        const gradePoint = grade == null ? 0 : grade.score;
         const totalPoint =
             (githubPoint * GITHUB_WEIGHT +
                 algorithmPoint * ALGORITHM_WEIGHT +

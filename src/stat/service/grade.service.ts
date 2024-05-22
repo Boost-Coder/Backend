@@ -25,7 +25,7 @@ export class GradeService {
         const newGrade = new Grade();
         newGrade.userId = userId;
         newGrade.grade = grade;
-        newGrade.point = this.calculatePoint(grade);
+        newGrade.score = this.calculatePoint(grade);
 
         await this.gradeRepository.save(newGrade);
     }
@@ -40,7 +40,7 @@ export class GradeService {
         const newGrade = new Grade();
         newGrade.userId = userId;
         newGrade.grade = grade;
-        newGrade.point = this.calculatePoint(grade);
+        newGrade.score = this.calculatePoint(grade);
 
         await this.gradeRepository.updateGrade(newGrade);
     }

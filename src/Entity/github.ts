@@ -24,7 +24,7 @@ export class Github {
     githubId: number;
 
     @Column('double')
-    point: number;
+    score: number;
 
     @Column()
     accessToken: string;

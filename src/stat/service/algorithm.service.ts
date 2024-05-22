@@ -49,12 +49,13 @@ export class AlgorithmService {
         algorithm.rating = bojInfo.rating;
         algorithm.tier = bojInfo.tier;
         algorithm.solvedCount = bojInfo.solvedCount;
-        algorithm.point = this.calculatePoint(bojInfo);
+        algorithm.score = this.calculatePoint(bojInfo);
         await this.algorithmRepository.save(algorithm);
     }
 
     async updateAlgorithm(userId: string) {
-        const algorithm = await this.algorithmRepository.findOneById(userId);
+        const algorithm: Algorithm =
+            await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
             return;
         }
@@ -63,7 +64,7 @@ export class AlgorithmService {
             algorithm.tier = bojInfo.tier;
             algorithm.rating = bojInfo.rating;
             algorithm.solvedCount = bojInfo.solvedCount;
-            algorithm.point = this.calculatePoint(bojInfo);
+            algorithm.score = this.calculatePoint(bojInfo);
             await this.algorithmRepository.updateAlgorithm(userId, algorithm);
         } catch (e) {
             if (e instanceof BadRequestException) {
@@ -78,7 +79,8 @@ export class AlgorithmService {
     }
 
     async modifyAlgorithm(userId: string, bojId: string) {
-        const algorithm = await this.algorithmRepository.findOneById(userId);
+        const algorithm: Algorithm =
+            await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
             throw new NotFoundException('Algorithm info not found');
         }
@@ -87,7 +89,7 @@ export class AlgorithmService {
         algorithm.tier = bojInfo.tier;
         algorithm.rating = bojInfo.rating;
         algorithm.solvedCount = bojInfo.solvedCount;
-        algorithm.point = this.calculatePoint(bojInfo);
+        algorithm.score = this.calculatePoint(bojInfo);
         await this.algorithmRepository.updateAlgorithm(userId, algorithm);
     }
 

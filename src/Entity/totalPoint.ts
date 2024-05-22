@@ -21,7 +21,7 @@ export class TotalPoint {
     userId: string;
 
     @Column('double')
-    point: number;
+    score: number;
 
     @CreateDateColumn({
         type: 'timestamp',

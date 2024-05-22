@@ -37,7 +37,7 @@ export class GithubService {
 
         const github = new Github();
         github.userId = userId;
-        github.point = githubPoint;
+        github.score = githubPoint;
         github.accessToken = tokens.accessToken;
         github.githubId = userResource.id;
         await this.githubRepository.save(github);
@@ -57,7 +57,7 @@ export class GithubService {
 
         const github = new Github();
         github.userId = userId;
-        github.point = githubPoint;
+        github.score = githubPoint;
         github.accessToken = tokens.accessToken;
         github.githubId = userResource.id;
         await this.githubRepository.updateGithub(github);
@@ -70,7 +70,7 @@ export class GithubService {
         }
         try {
             const githubInfo = await this.getUserResource(github.accessToken);
-            github.point = await this.calculateGithubPoint(githubInfo);
+            github.score = await this.calculateGithubPoint(githubInfo);
             await this.githubRepository.updateGithub(github);
         } catch (e) {
             this.logger.error(
@@ -92,7 +92,7 @@ export class GithubService {
     }
     public async calculateGithubPoint(userResource: object) {
         const commitInfo = await this.getCommits(userResource['login']);
-        const PRInfo = await this.getPRs(userResource['login']);
+        const prInfo = await this.getPRs(userResource['login']);
         const issueInfo = await this.getIssues(userResource['login']);
         const followers = userResource['followers'];
         const [COMMIT_WEIGHT, PR_WEIGHT, ISSUE_WEIGHT, FOLLOWER_WEIGHT] = [
