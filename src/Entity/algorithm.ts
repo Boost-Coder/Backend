@@ -35,7 +35,7 @@ export class Algorithm {
     @Column()
     solvedCount: number;
 
-    @Column()
+    @Column('double')
     point: number;
 
     @CreateDateColumn({

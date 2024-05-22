@@ -20,7 +20,7 @@ export class TotalPoint {
     })
     userId: string;
 
-    @Column()
+    @Column('double')
     point: number;
 
     @CreateDateColumn({

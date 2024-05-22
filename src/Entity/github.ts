@@ -23,7 +23,7 @@ export class Github {
     @Column()
     githubId: number;
 
-    @Column()
+    @Column('double')
     point: number;
 
     @Column()
