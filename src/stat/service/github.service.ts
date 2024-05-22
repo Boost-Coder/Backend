@@ -10,6 +10,7 @@ import { Github } from '../../Entity/github';
 import { CreateGithubDto } from '../dto/createGitub.dto';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
+import { exponential_cdf, log_normal_cdf } from '../../utils/cdf';
 
 @Injectable()
 export class GithubService {
@@ -103,6 +104,17 @@ export class GithubService {
             PRInfo * PR_WEIGHT +
             followers * FOLLOWER_WEIGHT
         );
+        const TOTAL_WEIGHT =
+            COMMIT_WEIGHT + PR_WEIGHT + ISSUE_WEIGHT + FOLLOWER_WEIGHT;
+
+        const point =
+            (COMMIT_WEIGHT * exponential_cdf(commitInfo / 250) +
+                ISSUE_WEIGHT * exponential_cdf(issueInfo / 25) +
+                PR_WEIGHT * exponential_cdf(prInfo / 50) +
+                FOLLOWER_WEIGHT * log_normal_cdf(followers / 10)) /
+            TOTAL_WEIGHT;
+
+        return point * 100;
     }
 
     public async getIssues(userName: string) {
