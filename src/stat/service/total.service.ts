@@ -67,7 +67,17 @@ export class TotalService {
     }
 
     calculateTotalPoint(github: Github, algorithm: Algorithm, grade: Grade) {
-        return 0;
+        const [GRADE_WEIGHT, ALGORITHM_WEIGHT, GITHUB_WEIGHT] = [1, 4, 4];
+        const TOTAL_WEIGHT = GRADE_WEIGHT + ALGORITHM_WEIGHT + GITHUB_WEIGHT;
+        const githubPoint = github == null ? 0 : github.point;
+        const algorithmPoint = algorithm == null ? 0 : algorithm.point;
+        const gradePoint = grade == null ? 0 : grade.point;
+        const totalPoint =
+            (githubPoint * GITHUB_WEIGHT +
+                algorithmPoint * ALGORITHM_WEIGHT +
+                gradePoint * GRADE_WEIGHT) /
+            TOTAL_WEIGHT;
+        return totalPoint;
     }
 
     public async getIndividualTotalRank(userId: string, options: PointFindDto) {
