@@ -18,7 +18,7 @@ export class GradeRepository extends StatRepository {
             { userId: newGrade.userId },
             {
                 grade: newGrade.grade,
-                point: newGrade.point,
+                point: newGrade.score,
             },
         );
     }

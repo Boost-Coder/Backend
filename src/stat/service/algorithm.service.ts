@@ -8,9 +8,9 @@ import {
 import axios from 'axios';
 import { AlgorithmRepository } from '../repository/algorithm.repository';
 import { Algorithm } from '../../Entity/algorithm';
-import { NotFoundError } from 'rxjs';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
+import { PERCENTILES, RATINGS } from '../../utils/algorithmData';
 
 const URL = 'https://solved.ac/api/v3/user/show?handle=';
 
@@ -49,12 +49,13 @@ export class AlgorithmService {
         algorithm.rating = bojInfo.rating;
         algorithm.tier = bojInfo.tier;
         algorithm.solvedCount = bojInfo.solvedCount;
-        algorithm.point = this.calculatePoint(bojInfo);
+        algorithm.score = this.calculatePoint(bojInfo);
         await this.algorithmRepository.save(algorithm);
     }
 
     async updateAlgorithm(userId: string) {
-        const algorithm = await this.algorithmRepository.findOneById(userId);
+        const algorithm: Algorithm =
+            await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
             return;
         }
@@ -63,7 +64,7 @@ export class AlgorithmService {
             algorithm.tier = bojInfo.tier;
             algorithm.rating = bojInfo.rating;
             algorithm.solvedCount = bojInfo.solvedCount;
-            algorithm.point = this.calculatePoint(bojInfo);
+            algorithm.score = this.calculatePoint(bojInfo);
             await this.algorithmRepository.updateAlgorithm(userId, algorithm);
         } catch (e) {
             if (e instanceof BadRequestException) {
@@ -78,7 +79,8 @@ export class AlgorithmService {
     }
 
     async modifyAlgorithm(userId: string, bojId: string) {
-        const algorithm = await this.algorithmRepository.findOneById(userId);
+        const algorithm: Algorithm =
+            await this.algorithmRepository.findOneById(userId);
         if (algorithm === null) {
             throw new NotFoundException('Algorithm info not found');
         }
@@ -87,7 +89,7 @@ export class AlgorithmService {
         algorithm.tier = bojInfo.tier;
         algorithm.rating = bojInfo.rating;
         algorithm.solvedCount = bojInfo.solvedCount;
-        algorithm.point = this.calculatePoint(bojInfo);
+        algorithm.score = this.calculatePoint(bojInfo);
         await this.algorithmRepository.updateAlgorithm(userId, algorithm);
     }
 
@@ -118,7 +120,27 @@ export class AlgorithmService {
     }
 
     private calculatePoint(bojInfo: BOJInfo) {
-        return 0;
+        const rating = bojInfo.rating;
+        if (rating <= RATINGS[0]) {
+            return 100 - PERCENTILES[0];
+        } else if (rating >= RATINGS[RATINGS.length - 1]) {
+            return 100 - PERCENTILES[PERCENTILES.length - 1];
+        } else {
+            for (let i = 1; i < RATINGS.length; i++) {
+                if (rating < RATINGS[i]) {
+                    // 선형 보간법
+                    const x0 = RATINGS[i - 1],
+                        x1 = RATINGS[i];
+                    const y0 = PERCENTILES[i - 1],
+                        y1 = PERCENTILES[i];
+                    const percentile =
+                        y0 + ((rating - x0) * (y1 - y0)) / (x1 - x0);
+                    return 100 - percentile;
+                }
+            }
+            return 0;
+        }
+        // return bojInfo.rating;
     }
 
     public async getIndividualAlgorithmRank(

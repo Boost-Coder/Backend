@@ -15,21 +15,21 @@ export class StatRepository extends Repository<any> {
 
     async findWithRank(options: RankListOptionDto): Promise<[RankListDto]> {
         const queryBuilder = this.createQueryBuilder()
-            .select(['b.rank', 'b.point', 'b.nickname'])
+            .select(['b.rank', 'b.score', 'b.nickname'])
             .addSelect('b.user_id', 'userId')
             .distinct(true)
             .from((sub) => {
                 return sub
-                    .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
+                    .select('RANK() OVER (ORDER BY a.score DESC)', 'rank')
                     .addSelect('a.user_id', 'user_id')
-                    .addSelect('a.point', 'point')
+                    .addSelect('a.score', 'score')
                     .addSelect('u.nickname', 'nickname')
                     .from(this.entity, 'a')
                     .innerJoin(User, 'u', 'a.user_id = u.user_id')
                     .where(this.createClassificationOption(options));
             }, 'b')
             .where(this.createCursorOption(options))
-            .orderBy('point', 'DESC')
+            .orderBy('score', 'DESC')
             .addOrderBy('userId')
             .limit(3);
         return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
@@ -41,7 +41,7 @@ export class StatRepository extends Repository<any> {
             .distinct(true)
             .from((sub) => {
                 return sub
-                    .select('RANK() OVER (ORDER BY a.point DESC)', 'rank')
+                    .select('RANK() OVER (ORDER BY a.score DESC)', 'rank')
                     .addSelect('a.user_id', 'user_id')
                     .from(this.entity, 'a')
                     .innerJoin(User, 'u', 'a.user_id = u.user_id')
@@ -54,9 +54,9 @@ export class StatRepository extends Repository<any> {
     }
     createCursorOption(options: RankListOptionDto) {
         if (!options.cursorPoint && !options.cursorUserId) {
-            return 'b.point > -1';
+            return 'b.score > -1';
         } else {
-            return `b.point < ${options.cursorPoint} or b.point = ${options.cursorPoint} AND b.user_id > '${options.cursorUserId}'`;
+            return `b.score < ${options.cursorPoint} or b.score = ${options.cursorPoint} AND b.user_id > '${options.cursorUserId}'`;
         }
     }
 

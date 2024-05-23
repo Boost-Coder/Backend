@@ -35,8 +35,8 @@ export class Algorithm {
     @Column()
     solvedCount: number;
 
-    @Column()
-    point: number;
+    @Column('double')
+    score: number;
 
     @CreateDateColumn({
         type: 'timestamp',

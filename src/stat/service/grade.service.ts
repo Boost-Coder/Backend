@@ -25,7 +25,7 @@ export class GradeService {
         const newGrade = new Grade();
         newGrade.userId = userId;
         newGrade.grade = grade;
-        newGrade.point = this.calculatePoint(grade);
+        newGrade.score = this.calculatePoint(grade);
 
         await this.gradeRepository.save(newGrade);
     }
@@ -40,7 +40,7 @@ export class GradeService {
         const newGrade = new Grade();
         newGrade.userId = userId;
         newGrade.grade = grade;
-        newGrade.point = this.calculatePoint(grade);
+        newGrade.score = this.calculatePoint(grade);
 
         await this.gradeRepository.updateGrade(newGrade);
     }
@@ -56,7 +56,9 @@ export class GradeService {
     }
 
     public calculatePoint(grade: number) {
-        return 0;
+        const maxGrade = 4.5;
+        const maxPercentage = 100;
+        return (grade / maxGrade) * maxPercentage;
     }
 
     public async getIndividualGradeRank(userId: string, options: PointFindDto) {

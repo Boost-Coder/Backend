@@ -23,8 +23,8 @@ export class Grade {
     @Column('double')
     grade: number;
 
-    @Column()
-    point: number;
+    @Column('double')
+    score: number;
 
     @CreateDateColumn({
         type: 'timestamp',

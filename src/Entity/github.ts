@@ -23,8 +23,8 @@ export class Github {
     @Column()
     githubId: number;
 
-    @Column()
-    point: number;
+    @Column('double')
+    score: number;
 
     @Column()
     accessToken: string;

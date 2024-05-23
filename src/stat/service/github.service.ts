@@ -10,6 +10,7 @@ import { Github } from '../../Entity/github';
 import { CreateGithubDto } from '../dto/createGitub.dto';
 import { RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
+import { exponential_cdf, log_normal_cdf } from '../../utils/cdf';
 
 @Injectable()
 export class GithubService {
@@ -36,7 +37,7 @@ export class GithubService {
 
         const github = new Github();
         github.userId = userId;
-        github.point = githubPoint;
+        github.score = githubPoint;
         github.accessToken = tokens.accessToken;
         github.githubId = userResource.id;
         await this.githubRepository.save(github);
@@ -56,7 +57,7 @@ export class GithubService {
 
         const github = new Github();
         github.userId = userId;
-        github.point = githubPoint;
+        github.score = githubPoint;
         github.accessToken = tokens.accessToken;
         github.githubId = userResource.id;
         await this.githubRepository.updateGithub(github);
@@ -69,7 +70,7 @@ export class GithubService {
         }
         try {
             const githubInfo = await this.getUserResource(github.accessToken);
-            github.point = await this.calculateGithubPoint(githubInfo);
+            github.score = await this.calculateGithubPoint(githubInfo);
             await this.githubRepository.updateGithub(github);
         } catch (e) {
             this.logger.error(
@@ -91,18 +92,23 @@ export class GithubService {
     }
     public async calculateGithubPoint(userResource: object) {
         const commitInfo = await this.getCommits(userResource['login']);
-        const PRInfo = await this.getPRs(userResource['login']);
+        const prInfo = await this.getPRs(userResource['login']);
         const issueInfo = await this.getIssues(userResource['login']);
         const followers = userResource['followers'];
         const [COMMIT_WEIGHT, PR_WEIGHT, ISSUE_WEIGHT, FOLLOWER_WEIGHT] = [
             2, 3, 2, 1,
         ];
-        return (
-            commitInfo * COMMIT_WEIGHT +
-            issueInfo * ISSUE_WEIGHT +
-            PRInfo * PR_WEIGHT +
-            followers * FOLLOWER_WEIGHT
-        );
+        const TOTAL_WEIGHT =
+            COMMIT_WEIGHT + PR_WEIGHT + ISSUE_WEIGHT + FOLLOWER_WEIGHT;
+
+        const point =
+            (COMMIT_WEIGHT * exponential_cdf(commitInfo / 250) +
+                ISSUE_WEIGHT * exponential_cdf(issueInfo / 25) +
+                PR_WEIGHT * exponential_cdf(prInfo / 50) +
+                FOLLOWER_WEIGHT * log_normal_cdf(followers / 10)) /
+            TOTAL_WEIGHT;
+
+        return point * 100;
     }
 
     public async getIssues(userName: string) {

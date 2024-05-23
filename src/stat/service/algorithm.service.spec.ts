@@ -84,7 +84,7 @@ describe('AlgorithmService', () => {
             algorithm.rating = mockResponse.data.rating;
             algorithm.tier = mockResponse.data.tier;
             algorithm.solvedCount = mockResponse.data.solvedCount;
-            algorithm.point = 0;
+            algorithm.score = 91.96000000000001;
             algorithmRepository.save.mockResolvedValue(algorithm);
 
             await service.createAlgorithm(userId, bojId);
@@ -133,7 +133,7 @@ describe('AlgorithmService', () => {
             algorithm.rating = 1500;
             algorithm.tier = 16;
             algorithm.solvedCount = 100;
-            algorithm.point = 0;
+            algorithm.score = 0;
             algorithmRepository.findOneById.mockResolvedValue(algorithm);
 
             const mockResponse = {
@@ -175,7 +175,7 @@ describe('AlgorithmService', () => {
             algorithm.rating = 1500;
             algorithm.tier = 16;
             algorithm.solvedCount = 100;
-            algorithm.point = 0;
+            algorithm.score = 0;
             algorithmRepository.findOneById.mockResolvedValue(algorithm);
 
             const mockResponse = {

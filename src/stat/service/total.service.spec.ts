@@ -83,8 +83,8 @@ describe('TotalService', () => {
             const github = new Github();
             const algorithm = new Algorithm();
             const grade = new Grade();
-            github.point = 123;
-            algorithm.point = 123;
+            github.score = 123;
+            algorithm.score = 123;
             grade.grade = 123;
 
             mockGitService.findGithub.mockResolvedValue(github);
@@ -93,8 +93,8 @@ describe('TotalService', () => {
 
             const result = await service.findStat(userId);
             expect(result.grade).toEqual(grade.grade);
-            expect(result.githubPoint).toEqual(github.point);
-            expect(result.algorithmPoint).toEqual(algorithm.point);
+            expect(result.githubPoint).toEqual(github.score);
+            expect(result.algorithmPoint).toEqual(algorithm.score);
         });
 
         it('should return null if stat does not exist', async function () {
@@ -102,7 +102,7 @@ describe('TotalService', () => {
             const github = new Github();
             const algorithm = null;
             const grade = new Grade();
-            github.point = 123;
+            github.score = 123;
             grade.grade = 123;
 
             mockGitService.findGithub.mockResolvedValue(github);
@@ -111,7 +111,7 @@ describe('TotalService', () => {
 
             const result = await service.findStat(userId);
             expect(result.grade).toEqual(grade.grade);
-            expect(result.githubPoint).toEqual(github.point);
+            expect(result.githubPoint).toEqual(github.score);
             expect(result.algorithmPoint).toEqual(null);
         });
     });

@@ -19,7 +19,7 @@ export class GithubRepository extends StatRepository {
             {
                 githubId: github.githubId,
                 accessToken: github.accessToken,
-                point: github.point,
+                point: github.score,
             },
         );
     }
