@@ -124,7 +124,9 @@ export class RankController {
         description: '서버 오류',
     })
     async findTotalRank(@Query() options: RankListOptionDto) {
-        return await this.totalService.getTotalRank(options);
+        const a = await this.totalService.getTotalRank(options);
+        console.log(a);
+        return a;
     }
 
     @ApiTags('rank')
