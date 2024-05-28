@@ -32,7 +32,14 @@ export class StatRepository extends Repository<any> {
             .orderBy('score', 'DESC')
             .addOrderBy('userId')
             .limit(3);
-        return await (<Promise<[RankListDto]>>queryBuilder.getRawMany());
+        const result = await (<Promise<[RankListDto]>>(
+            queryBuilder.getRawMany()
+        ));
+        result.forEach(
+            (result) => (result.rank = parseInt(String(result.rank), 10)),
+        );
+
+        return result;
     }
 
     public async findIndividualRank(userId: string, options: PointFindDto) {
