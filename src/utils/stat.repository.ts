@@ -31,7 +31,7 @@ export class StatRepository extends Repository<any> {
             .where(this.createCursorOption(options))
             .orderBy('score', 'DESC')
             .addOrderBy('userId')
-            .limit(3);
+            .limit(15);
         const result = await (<Promise<[RankListDto]>>(
             queryBuilder.getRawMany()
         ));
