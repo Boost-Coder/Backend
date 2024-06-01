@@ -51,7 +51,8 @@ export class StatController {
     @ApiTags('stat')
     @ApiOperation({
         summary: '개발 역량 비교 API',
-        description: '두 사용자의 역량을 비교한다.',
+        description:
+            '두 사용자의 역량을 비교한다. user1 - user2 한 결과를 반환한다. 둘중 하나라도 역량이 등록되지 않은 경우 null 반환. 가장차이나는 역량은 user1이 user2 보다 작은 역량중에서 찾아 반환한다. user1이 user2 보다 모든 역량이 크거나 같다면 null 반환',
     })
     @ApiBearerAuth('accessToken')
     @ApiOkResponse({
