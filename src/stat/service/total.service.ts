@@ -10,6 +10,7 @@ import { Algorithm } from '../../Entity/algorithm';
 import { RankListDto, RankListOptionDto } from '../dto/rank-list-option.dto';
 import { PointFindDto } from '../dto/rank-find.dto';
 import { StatFindDto } from '../dto/stat-find.dto';
+import { CompareUsersResponseDto } from '../dto/compareUsers.dto';
 
 @Injectable()
 export class TotalService {
@@ -82,6 +83,32 @@ export class TotalService {
 
     public async getIndividualTotalRank(userId: string, options: PointFindDto) {
         return await this.totalRepository.findIndividualRank(userId, options);
+    }
+
+    async compareUsers(user1: string, user2: string) {
+        const compareUsersResponseDto = new CompareUsersResponseDto();
+        compareUsersResponseDto.algorithmRankDifference =
+            await this.compareAlgorithmRank(user1, user2);
+        compareUsersResponseDto.algorithmScoreDifference =
+            await this.compareAlgorithmScore(user1, user2);
+
+        compareUsersResponseDto.githubScoreDifference =
+            await this.compareGithubScore(user1, user2);
+        compareUsersResponseDto.githubRankDifference =
+            await this.compareGithubRank(user1, user2);
+
+        compareUsersResponseDto.gradeScoreDifference =
+            await this.compareGradeScore(user1, user2);
+        compareUsersResponseDto.gradeRankDifference =
+            await this.compareGradeRank(user1, user2);
+
+        compareUsersResponseDto.totalScoreDifference =
+            await this.compareTotalScore(user1, user2);
+        compareUsersResponseDto.totalRankDifference =
+            await this.compareTotalRank(user1, user2);
+
+        compareUsersResponseDto.mostSignificantScoreDifferenceStat = 'github';
+        return compareUsersResponseDto;
     }
 
     async compareGithubScore(user1: string, user2: string) {
