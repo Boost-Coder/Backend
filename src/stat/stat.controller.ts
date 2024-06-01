@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { AlgorithmService } from './service/algorithm.service';
@@ -32,6 +33,10 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Transactional } from 'typeorm-transactional';
+import {
+    CompareUsersDto,
+    CompareUsersResponseDto,
+} from './dto/compareUsers.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -382,6 +387,19 @@ export class StatController {
         await this.gradeService.gradeDelete(userId);
         await this.totalService.updateTotal(userId);
     }
+
+    @ApiTags('stat')
+    @ApiOperation({
+        summary: '개발 역량 비교 API',
+        description: '두 사용자의 역량을 비교한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저 정보 비교 성공',
+        type: CompareUsersResponseDto,
+    })
+    @Get('compare')
+    public compareUsers(@Query() users: CompareUsersDto) {}
 
     // @Get('github/redirect')
     // public async redirect(@Query('code') code: string) {
