@@ -148,4 +148,25 @@ export class TotalService {
         );
         return user1Rank - user2Rank;
     }
+
+    async compareTotalScore(user1: string, user2: string) {
+        const user1Total = await this.totalRepository.findOneById(user1);
+        const user2Total = await this.totalRepository.findOneById(user2);
+        if (user1Total == null || user2Total == null) {
+            return null;
+        }
+        return user1Total.score - user2Total.score;
+    }
+
+    async compareTotalRank(user1: string, user2: string) {
+        const user1Rank = await this.getIndividualTotalRank(
+            user1,
+            new PointFindDto(),
+        );
+        const user2Rank = await this.getIndividualTotalRank(
+            user2,
+            new PointFindDto(),
+        );
+        return user1Rank - user2Rank;
+    }
 }
