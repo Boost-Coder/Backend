@@ -84,10 +84,21 @@ export class TotalService {
         return await this.totalRepository.findIndividualRank(userId, options);
     }
 
-    private async compareGithubScore(user1: string, user2: string) {
+    async compareGithubScore(user1: string, user2: string) {
         const user1Github = await this.githubService.findGithub(user1);
         const user2Github = await this.githubService.findGithub(user2);
-        const githubScoreDifference = user1Github.score - user2Github.score;
-        return githubScoreDifference;
+        return user1Github.score - user2Github.score;
+    }
+
+    async compareGithubRank(user1: string, user2: string) {
+        const user1Rank = await this.githubService.getIndividualGithubRank(
+            user1,
+            new PointFindDto(),
+        );
+        const user2Rank = await this.githubService.getIndividualGithubRank(
+            user2,
+            new PointFindDto(),
+        );
+        return user1Rank - user2Rank;
     }
 }
