@@ -87,6 +87,9 @@ export class TotalService {
     async compareGithubScore(user1: string, user2: string) {
         const user1Github = await this.githubService.findGithub(user1);
         const user2Github = await this.githubService.findGithub(user2);
+        if (user1Github == null || user2Github == null) {
+            return null;
+        }
         return user1Github.score - user2Github.score;
     }
 
@@ -103,9 +106,12 @@ export class TotalService {
     }
 
     async compareAlgorithmScore(user1: string, user2: string) {
-        const user1Github = await this.algorithmService.findAlgorithm(user1);
-        const user2Github = await this.algorithmService.findAlgorithm(user2);
-        return user1Github.score - user2Github.score;
+        const user1Algorithm = await this.algorithmService.findAlgorithm(user1);
+        const user2Algorithm = await this.algorithmService.findAlgorithm(user2);
+        if (user1Algorithm == null || user2Algorithm == null) {
+            return null;
+        }
+        return user1Algorithm.score - user2Algorithm.score;
     }
 
     async compareAlgorithmRank(user1: string, user2: string) {
