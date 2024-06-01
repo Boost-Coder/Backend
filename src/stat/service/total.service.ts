@@ -127,4 +127,25 @@ export class TotalService {
             );
         return user1Rank - user2Rank;
     }
+
+    async compareGradeScore(user1: string, user2: string) {
+        const user1Grade = await this.gradeService.findGrade(user1);
+        const user2Grade = await this.gradeService.findGrade(user2);
+        if (user1Grade == null || user2Grade == null) {
+            return null;
+        }
+        return user1Grade.score - user2Grade.score;
+    }
+
+    async compareGradeRank(user1: string, user2: string) {
+        const user1Rank = await this.gradeService.getIndividualGradeRank(
+            user1,
+            new PointFindDto(),
+        );
+        const user2Rank = await this.gradeService.getIndividualGradeRank(
+            user2,
+            new PointFindDto(),
+        );
+        return user1Rank - user2Rank;
+    }
 }
