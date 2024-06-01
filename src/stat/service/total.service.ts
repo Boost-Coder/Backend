@@ -101,4 +101,24 @@ export class TotalService {
         );
         return user1Rank - user2Rank;
     }
+
+    async compareAlgorithmScore(user1: string, user2: string) {
+        const user1Github = await this.algorithmService.findAlgorithm(user1);
+        const user2Github = await this.algorithmService.findAlgorithm(user2);
+        return user1Github.score - user2Github.score;
+    }
+
+    async compareAlgorithmRank(user1: string, user2: string) {
+        const user1Rank =
+            await this.algorithmService.getIndividualAlgorithmRank(
+                user1,
+                new PointFindDto(),
+            );
+        const user2Rank =
+            await this.algorithmService.getIndividualAlgorithmRank(
+                user2,
+                new PointFindDto(),
+            );
+        return user1Rank - user2Rank;
+    }
 }
