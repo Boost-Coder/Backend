@@ -101,8 +101,29 @@ export class TotalService {
         [comparison.totalScoreDifference, comparison.totalRankDifference] =
             await this.compareTotal(user1, user2);
 
-        comparison.mostSignificantScoreDifferenceStat = 'github';
+        comparison.mostSignificantScoreDifferenceStat =
+            this.findMaxScoreDifference(comparison);
         return comparison;
+    }
+
+    findMaxScoreDifference(response: CompareUsersResponseDto): string | null {
+        const scoreDifferences = {
+            algorithm: response.algorithmScoreDifference,
+            github: response.githubScoreDifference,
+            grade: response.gradeScoreDifference,
+        };
+
+        let maxDifference = 0;
+        let maxDifferenceKey: string | null = null;
+
+        for (const [key, value] of Object.entries(scoreDifferences)) {
+            if (value !== null && value < 0 && value < maxDifference) {
+                maxDifference = value;
+                maxDifferenceKey = key;
+            }
+        }
+
+        return maxDifferenceKey;
     }
 
     private async compareGithub(user1: string, user2: string) {
