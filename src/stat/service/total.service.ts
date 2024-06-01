@@ -83,4 +83,11 @@ export class TotalService {
     public async getIndividualTotalRank(userId: string, options: PointFindDto) {
         return await this.totalRepository.findIndividualRank(userId, options);
     }
+
+    private async compareGithubScore(user1: string, user2: string) {
+        const user1Github = await this.githubService.findGithub(user1);
+        const user2Github = await this.githubService.findGithub(user2);
+        const githubScoreDifference = user1Github.score - user2Github.score;
+        return githubScoreDifference;
+    }
 }
