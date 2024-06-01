@@ -7,7 +7,7 @@ export class CompareUsersDto {
     user1: string;
 
     @ApiProperty({ required: true })
-    user2: number;
+    user2: string;
 }
 
 export class CompareUsersResponseDto {
