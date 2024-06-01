@@ -50,6 +50,21 @@ export class StatController {
 
     @ApiTags('stat')
     @ApiOperation({
+        summary: '개발 역량 비교 API',
+        description: '두 사용자의 역량을 비교한다.',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저 정보 비교 성공',
+        type: CompareUsersResponseDto,
+    })
+    @Get('compare')
+    public async compareUsers(@Query() users: CompareUsersDto) {
+        return await this.totalService.compareUsers(users.user1, users.user2);
+    }
+
+    @ApiTags('stat')
+    @ApiOperation({
         summary: '유저의 개발 역량 반환 API',
         description:
             '유저의 개발 역량을 반환한다. 깃허브, 알고리즘, 학점, 종합 점수를 반환한다.',
@@ -387,19 +402,6 @@ export class StatController {
         await this.gradeService.gradeDelete(userId);
         await this.totalService.updateTotal(userId);
     }
-
-    @ApiTags('stat')
-    @ApiOperation({
-        summary: '개발 역량 비교 API',
-        description: '두 사용자의 역량을 비교한다.',
-    })
-    @ApiBearerAuth('accessToken')
-    @ApiOkResponse({
-        description: '유저 정보 비교 성공',
-        type: CompareUsersResponseDto,
-    })
-    @Get('compare')
-    public compareUsers(@Query() users: CompareUsersDto) {}
 
     // @Get('github/redirect')
     // public async redirect(@Query('code') code: string) {
