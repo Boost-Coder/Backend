@@ -129,7 +129,7 @@ export class TotalService {
             user2,
             new PointFindDto(),
         );
-        return user1Rank - user2Rank;
+        return user1Rank.rank - user2Rank.rank;
     }
 
     async compareAlgorithmScore(user1: string, user2: string) {
@@ -152,7 +152,7 @@ export class TotalService {
                 user2,
                 new PointFindDto(),
             );
-        return user1Rank - user2Rank;
+        return user1Rank.rank - user2Rank.rank;
     }
 
     async compareGradeScore(user1: string, user2: string) {
@@ -173,7 +173,7 @@ export class TotalService {
             user2,
             new PointFindDto(),
         );
-        return user1Rank - user2Rank;
+        return user1Rank.rank - user2Rank.rank;
     }
 
     async compareTotalScore(user1: string, user2: string) {
@@ -194,6 +194,6 @@ export class TotalService {
             user2,
             new PointFindDto(),
         );
-        return user1Rank - user2Rank;
+        return user1Rank.rank - user2Rank.rank;
     }
 }
