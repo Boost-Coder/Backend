@@ -48,15 +48,19 @@ export class StatRepository extends Repository<any> {
             .distinct(true)
             .from((sub) => {
                 return sub
-                    .select('RANK() OVER (ORDER BY a.score DESC)', 'rank')
+                    .select(
+                        'RANK() OVER (ORDER BY a.score DESC, user_id ASC)',
+                        'rank',
+                    )
                     .addSelect('a.user_id', 'user_id')
                     .from(this.entity, 'a')
                     .innerJoin(User, 'u', 'a.user_id = u.user_id')
                     .addSelect('u.major', 'major')
-                    .where(this.createClassificationOption(options));
+                    .where(this.createClassificationOption(options))
+                    .orderBy('score', 'DESC')
+                    .addOrderBy('user_id');
             }, 'b')
             .where(`b.user_id = '${userId}'`);
-
         return await queryBuilder.getRawOne();
     }
     createCursorOption(options: RankListOptionDto) {
