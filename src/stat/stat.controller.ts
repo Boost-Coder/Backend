@@ -6,6 +6,7 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UseGuards,
 } from '@nestjs/common';
 import { AlgorithmService } from './service/algorithm.service';
@@ -32,6 +33,10 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Transactional } from 'typeorm-transactional';
+import {
+    CompareUsersDto,
+    CompareUsersResponseDto,
+} from './dto/compareUsers.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('api/stat')
@@ -42,6 +47,22 @@ export class StatController {
         private readonly gradeService: GradeService,
         private readonly totalService: TotalService,
     ) {}
+
+    @ApiTags('stat')
+    @ApiOperation({
+        summary: '개발 역량 비교 API',
+        description:
+            '두 사용자의 역량을 비교한다. user1 - user2 한 결과를 반환한다. 둘중 하나라도 역량이 등록되지 않은 경우 null 반환. 가장차이나는 역량은 user1이 user2 보다 작은 역량중에서 찾아 반환한다. user1이 user2 보다 모든 역량이 크거나 같다면 null 반환',
+    })
+    @ApiBearerAuth('accessToken')
+    @ApiOkResponse({
+        description: '유저 정보 비교 성공',
+        type: CompareUsersResponseDto,
+    })
+    @Get('compare')
+    public async compareUsers(@Query() users: CompareUsersDto) {
+        return await this.totalService.compareUsers(users.user1, users.user2);
+    }
 
     @ApiTags('stat')
     @ApiOperation({
