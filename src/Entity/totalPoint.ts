@@ -1,4 +1,6 @@
 import {
+    BeforeInsert,
+    BeforeUpdate,
     Column,
     CreateDateColumn,
     Entity,
@@ -20,7 +22,7 @@ export class TotalPoint {
     })
     userId: string;
 
-    @Column('double')
+    @Column('decimal', { precision: 10, scale: 2 })
     score: number;
 
     @CreateDateColumn({
@@ -34,6 +36,12 @@ export class TotalPoint {
         nullable: true,
     })
     updateDate: Date;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    roundAmount() {
+        this.score = Math.round(this.score * 100) / 100;
+    }
 
     @OneToOne(() => User, (user) => user.userId, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'user_id', referencedColumnName: 'userId' })
