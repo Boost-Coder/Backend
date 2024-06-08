@@ -35,9 +35,10 @@ export class StatRepository extends Repository<any> {
         const result = await (<Promise<[RankListDto]>>(
             queryBuilder.getRawMany()
         ));
-        result.forEach(
-            (result) => (result.rank = parseInt(String(result.rank), 10)),
-        );
+        result.forEach((result) => {
+            result.rank = parseInt(String(result.rank), 10);
+            result.score = parseFloat(String(result.score));
+        });
 
         return result;
     }
