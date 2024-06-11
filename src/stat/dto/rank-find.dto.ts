@@ -20,10 +20,40 @@ export class RankFindDto {
     @ApiProperty()
     grade: number;
 
-    constructor(total, algorithm, github, grade) {
+    @ApiProperty()
+    totalScore: number;
+
+    @ApiProperty()
+    algorithmScore: number;
+
+    @ApiProperty()
+    githubScore: number;
+
+    @ApiProperty()
+    gradeScore: number;
+
+    @ApiProperty()
+    nickname: string;
+
+    constructor(
+        total,
+        algorithm,
+        github,
+        grade,
+        totalScore,
+        algorithmScore,
+        githubScore,
+        gradeScore,
+        nickname,
+    ) {
         this.total = total;
         this.algorithm = algorithm;
         this.github = github;
         this.grade = grade;
+        this.totalScore = totalScore;
+        this.algorithmScore = algorithmScore;
+        this.githubScore = githubScore;
+        this.gradeScore = gradeScore;
+        this.nickname = nickname;
     }
 }

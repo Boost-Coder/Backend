@@ -1,4 +1,11 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    Param,
+    Query,
+    UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { AlgorithmService } from './service/algorithm.service';
 import { RankListDto, RankListOptionDto } from './dto/rank-list-option.dto';
@@ -155,33 +162,43 @@ export class RankController {
         const user = await this.userService.findUserByUserId(userId);
 
         if (options.major && user.major !== options.major) {
-            return new RankFindDto(null, null, null, null);
+            throw new BadRequestException();
         } else {
             const algorithmRank =
                 await this.algorithmService.getIndividualAlgorithmRank(
                     userId,
                     options,
                 );
+            const algorithm = await this.algorithmService.findAlgorithm(userId);
 
             const githubRank = await this.githubService.getIndividualGithubRank(
                 userId,
                 options,
             );
+            const github = await this.githubService.findGithub(userId);
 
             const gradeRank = await this.gradeService.getIndividualGradeRank(
                 userId,
                 options,
             );
+            const grade = await this.gradeService.findGrade(userId);
 
             const totalRank = await this.totalService.getIndividualTotalRank(
                 userId,
                 options,
             );
+            const total = await this.totalService.findStat(userId);
+
             return new RankFindDto(
                 totalRank ? totalRank.rank : null,
                 algorithmRank ? algorithmRank.rank : null,
                 githubRank ? githubRank.rank : null,
                 gradeRank ? gradeRank.rank : null,
+                total ? total.totalPoint : null,
+                algorithm ? algorithm.score : null,
+                github ? github.score : null,
+                grade ? grade.score : null,
+                user.nickname,
             );
         }
     }
