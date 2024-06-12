@@ -20,7 +20,10 @@ export class StatRepository extends Repository<any> {
             .distinct(true)
             .from((sub) => {
                 return sub
-                    .select('RANK() OVER (ORDER BY a.score DESC)', 'rank')
+                    .select(
+                        'RANK() OVER (ORDER BY a.score DESC, a.user_id ASC)',
+                        'rank',
+                    )
                     .addSelect('a.user_id', 'user_id')
                     .addSelect('a.score', 'score')
                     .addSelect('u.nickname', 'nickname')
