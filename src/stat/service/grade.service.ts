@@ -56,9 +56,7 @@ export class GradeService {
     }
 
     public calculatePoint(grade: number) {
-        const maxGrade = 4.5;
-        const maxPercentage = 100;
-        return (grade / maxGrade) * maxPercentage;
+        return grade;
     }
 
     public async getIndividualGradeRank(userId: string, options: PointFindDto) {
